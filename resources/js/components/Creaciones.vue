@@ -123,7 +123,11 @@ export default {
      return {
       arrayCreaciones: [],
       hTBCreaciones: [
-        { text: "Nombre", value: "nombre" },
+        { text: "Descripcion", value: "Descripcion" },
+        { text: "Articulo", value: "Articulo" },
+        { text: "Pedidos", value: "Pedidos" },
+        { text: "Cantidad", value: "Cantidad" },
+        { text: "Precio", value: "Precio" },
         { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],
       loader: false,

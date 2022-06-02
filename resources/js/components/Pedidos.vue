@@ -6,253 +6,423 @@
       </v-overlay>
       <v-card>
         <v-card-title>
-          {{titleList}}
+          Inventario de Pedidos
           <div class="flex-grow-1"></div>
-          
-          <v-text-field v-model="search" label="Buscar" hide-details></v-text-field>
+          <v-text-field v-model="search" label="Buscar Pedido" hide-details></v-text-field>
         </v-card-title>
         <v-data-table
           :headers="hTBPedidos"
           :items="arrayPedidos"
           :footer-props="{
-            'items-per-page-options': [10, 20, 30,40],
+            'items-per-page-options': [5,10, 20, 30,40],
             'items-per-page-text' : 'Registros Por Página'
           }"
-          :items-per-page="10"
+          :items-per-page="5"
           :search="search"
           multi-sort
           class="elevation-1"
         >
+          <!-- Template Para Modal de Actualizar y Agregar Pedido -->
+
           <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-checkbox v-model="mostrarPedidos" class="mx-6" label="Pedidos" >value="false"</v-checkbox>  
-                <v-checkbox v-model="mostrarAnulados" class="mx-6" label="Anulados" >value="false"</v-checkbox>  
-                <v-checkbox v-model="mostrarDevoluciones" class="mx-6" label="Devoluciones" >value="false"</v-checkbox>  
-            <div class="flex-grow-1"></div>
-              <!--<v-btn
-                elevation="10"
-                :to="{name: 'pedidos.form', params: { pedido:{}, action: 'add' } }"
-                color="grey darken-3"
-                dark
-                class="mb-2 white--text"
-              >
-                Nueva Reserva&nbsp;
-                <v-icon>library_add</v-icon>
-              </v-btn>-->
+              <div class="flex-grow-1"></div>
+              <v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/pedidos/pdf" target="_blank">
+                     Generar PDF&nbsp;
+                    <v-icon>file-document-box-multiple-outline</v-icon>
+                  </v-btn>
+              <v-dialog v-model="dialog" persistent max-width="700px">
+                <template v-slot:activator="{ on }">
+                  <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">
+                    Agregar&nbsp;
+                    <v-icon>mdi-plus-box-multiple-outline</v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title class="headline grey lighten-2" primary-titles>
+                    <span class="headline" v-text="formTitle"></span>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-container>
+                      <v-form ref="formPedido" v-model="validForm" :lazy-validation="true">
+                        <v-text-field
+                          append-icon="mdi-folder-outline"
+                          v-model="pedido.codigo"
+                          label="Código"
+
+                        ></v-text-field>
+                         <v-text-field
+                          append-icon="laptop"
+                          v-model="pedido.nombre"
+                          @keyup="errorsNombre = []"
+                          :rules="[v => !!v || 'Nombre Es Requerido']"
+                          label="Nombre"
+                          required
+                          :error-messages="errorsNombre"
+                        ></v-text-field>
+                         <v-textarea                          
+                          label="Descripción" 
+                          no-resize
+                          rows="2" 
+                          v-model="pedido.descripcion" 
+                          @keyup="errorsNombre = []"
+                          :rules="[v => !!v || 'Descripcion Es Requerido']"
+                          required
+                          :error-messages="errorsNombre"                       
+                        ></v-textarea>
+                        <v-row>
+                          <v-col cols="12" md="6">
+                            <v-select
+                                v-model="pedido.marca_id"
+                                :items="arrayMarcas"
+                                label="Seleccione Marca"
+                                item-value="id"
+                                item-text="nombre"
+                                ></v-select>
+                          </v-col>
+                          <v-col cols="12" md="6">
+                            <v-select
+                                v-model="pedido.categoria_id"
+                                :items="arrayCategorias"
+                                label="Seleccione Categoria"
+                                item-value="id"
+                                item-text="nombre"
+                                ></v-select>
+                          </v-col>
+                        </v-row>
+                      
+                      </v-form>
+                    </v-container>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <div class="flex-grow-1"></div>
+                    <v-btn color="red darken-1" text @click="cerrarModal">Cerrar</v-btn>
+                    <v-btn
+                      color="info darken-1"
+                      :disabled="!validForm"
+                      @click="savePedido()"
+                      text
+                      v-text="btnTitle"
+                    ></v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-toolbar>
           </template>
-
-          <!-- template para las acciones -->
-          <template v-slot:item.action="{item}">
+         
+          <!-- Template que va en la tabla en la columna de Acciones (Editar,Desactivar) -->
+        
+          <template v-slot:item.action="{item}" v-slot:activator="{ on }">
             <v-tooltip top>
               <template v-slot:activator="{ on }">
                 <v-btn
-                  elevation="10"
-                  @click="mostrarDetalle(item)"
-                  color="info"
-                  class="white--text mx-1"
-                  small
-                  v-on="on"
-                >
-                  <v-icon>pageview</v-icon>
-                </v-btn>
-              </template>
-              <span>Ver Articulos</span>
-            </v-tooltip>
-             <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn v-if="estado=='R'"
-                  elevation="10"
                   color="success"
-                  class="white--text"
-                  small
-                  @click="cambiarEstado(item,'P')"
-                  v-on="on"
-                >
-                  <v-icon>check</v-icon>
-                </v-btn>
-              </template>
-              <span>Realizar Pedido</span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn v-if="estado=='R'"
-                  color="red"
-                  class="mx-1 white--text"
                   elevation="8"
                   small
+                  dark
+                  :disabled="item.id < 0"
                   v-on="on"
-                  @click="cambiarEstado(item,'A')"
+                  @click="showModalEditar(item)"
                 >
-                  <v-icon>close</v-icon>
+                  <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </template>
-              <span>Anular Registro</span>
+              <span>Actualizar Datos</span>
             </v-tooltip>
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn v-if="estado=='P'"
-                  color="deep-orange"
-                  class="mx-1 white--text"
+            <v-tooltip top >
+              <template v-slot:activator="{ on }" >
+                <v-btn
+                  color="info"
+                  class="mx-1"
                   elevation="8"
                   small
+                  dark
+                  :disabled="item.id < 0"
                   v-on="on"
-                  @click="cambiarEstado(item,'D')"
+                  @click="deletePedido(item)"
                 >
-                  <v-icon>mdi-cached</v-icon>
+                  <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </template>
-              <span>Devolver Pedido</span>
+              <span>Eliminar Registro</span>
             </v-tooltip>
           </template>
         </v-data-table>
+        <v-snackbar v-model="snackbar">
+          {{ msjSnackBar }}
+          <v-btn color="red" text @click="snackbar = false">Cerrar</v-btn>
+        </v-snackbar>
       </v-card>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "ListadoReservas",
-  data: () => ({
-    arrayPedidos: [],
-    hTBPedidos: [
-      { text: "No Reserva", value: "correlativo" },
-      { text: "Fecha Reserva", value: "fecha_reserva" },
-      { text: "Fecha Pedido", value: "fecha_pedido" },
-      { text: "Hora Inicio", value: "hora_inicio" },
-      { text: "Hora Finalización", value: "hora_fin" },
-      { text: "Usuario", value: "name" },
-      
-      { text: "Acciones", value: "action", sortable: false, align: "center" }
-    ],
-    loader: false,
-    search: "",
-    estado:"R",
-    mostrarPedidos:false,
-    mostrarAnulados:false,
-    mostrarDevoluciones:false,
-    mes: null,
-    anio : null,
-    titleList:"Listado de Reservas de Articulos"
-  }),
-  watch:{
-       mostrarPedidos() {
-        let me = this;
-        if(me.mostrarPedidos) {
-            me.estado = 'P';
-            me.titleList = "Listado de Pedidos de Articulos";
-        }else{
-            me.estado = 'R';
-            me.titleList = "Listado de Reservas de Articulos";
-        }
-        me.fetchPedidos(me.estado);
+  data() {
+     return {
+      arrayPedidos: [],
+      arrayMarcas: [],
+      arrayCategorias: [],
+      hTBPedidos: [
+        { text: "Fecha", value: "codigo" },
+        { text: "Estado", value: "categoria" },
+        { text: "Cliente", value: "talla" },
+        { text: "Fecha entrega", value: "color" },
+        { text: "Usuario", value: "descripcion" },
+        { text: "Acciones", value: "action", sortable: false, align: "center" }
+      ],
+      loader: false,
+      search: "",
+      dialog: false,
+      pedido: {
+        id: null,
+        codigo: "",
+        nombre: "",
+        descripcion: "",
+        estado: "",
+        marca_id: null,
+        marca: null,
+        categoria_id: null,
+        categoria: null
       },
-      mostrarAnulados() {
-        let me = this;
-        if(me.mostrarAnulados) {
-            me.estado = 'A';
-            me.titleList = "Listado de Reservas Anuladas";
-        }else{
-            me.estado = 'R';
-            me.titleList = "Listado de Reservas de Articulos";
-        }
-        me.fetchPedidos(me.estado);
-      },
-      mostrarDevoluciones() {
-        let me = this;
-        if(me.mostrarDevoluciones) {
-            me.estado = 'D';
-            me.titleList = "Listado de Devoluciones";
-        }else{
-            me.estado = 'R';
-            me.titleList = "Listado de Reservas de Articulos";
-        }
-        me.fetchPedidos(me.estado);
-      },
+      validForm: true,
+      snackbar: false,
+      msjSnackBar: "",
+      errorsNombre: [],
+      editedPedido: -1
+    };
   },
-  computed: {},
+  computed: {
+    formTitle() {
+      return this.pedido.id === null
+        ? "Agregar Pedido"
+        : "Actualizar Pedido";
+    },
+    btnTitle() {
+      return this.pedido.id === null ? "Guardar" : "Actualizar";
+    }
+  },
   methods: {
-    fetchPedidos(estado) {
-      let me = this, state = estado;
+    fetchPedidos() {
+      let me = this;
       me.loader = true;
-      axios.get(`/pedidos/state?state=`+me.estado)
+      axios.get(`/pedidos/all`)
         .then(function(response) {
-          if(Object.keys(response.data).length==0){
-              me.arrayPedidos = [];
-          }else{
-              me.arrayPedidos = response.data;
-          }
+          me.arrayPedidos = response.data;
           me.loader = false;
         })
         .catch(function(error) {
           me.loader = false;
           console.log(error);
         });
-       me.loader = false;
+     me.loader = false;
     },
-    contructFecha(){
+      fetchCategorias() {
       let me = this;
-      if(me.mes != null && me.anio != null){
-          let fecha = me.mes +"-"+ me.anio;
-          return me.$moment(fecha, "DD-MM-YYYY").toDate();
-      }else{
-        return null;
+      me.loader = true;
+      axios.get(`/categorias/all`)
+        .then(function(response) {
+          me.arrayCategorias = response.data;
+          me.loader = false;
+        })
+        .catch(function(error) {
+          me.loader = false;
+          console.log(error);
+        });
+     me.loader = false;
+    },
+    fetchMarcas() {
+      let me = this;
+      me.loader = true;
+      axios.get(`/marcas/all`)
+        .then(function(response) {
+          me.arrayMarcas = response.data;
+          me.loader = false;
+        })
+        .catch(function(error) {
+          me.loader = false;
+          console.log(error);
+        });
+     me.loader = false;
+    },
+    
+    setMessageToSnackBar(msj, estado) {
+      let me = this;
+      me.snackbar = estado;
+      me.msjSnackBar = msj;
+    },
+    cerrarModal() {
+      let me = this;
+      me.dialog = false;
+      setTimeout(() => {
+        me.pedido = {
+          id: null,
+          codigo: "",
+          nombre: "",
+          descripcion: "",
+          marca: null,
+          categoria: null
+        };
+        me.resetValidation();
+      }, 300);
+    },
+    resetValidation() {
+      let me = this;
+      me.errorsNombre = [];
+      me.$refs.formPedido.resetValidation();
+    },
+    showModalEditar(pedido) {
+      let me = this;
+      me.editedPedido = me.arrayPedidos.indexOf(pedido);
+      me.pedido = Object.assign({}, pedido);
+      me.dialog = true;
+    },
+    
+   savePedido() {
+      let me = this;
+      if (me.$refs.formPedido.validate()) {
+        let accion = me.pedido.id == null ? "add" : "upd";
+        me.loader = true;
+        if(accion=="add"){
+            me.pedido.estado = "D";
+            axios.post(`/pedidos/save`,me.pedido)
+            .then(function(response) {
+             // console.log(response.status);
+              if(response.status ==201){
+                 me.verificarAccionDato(response.data, response.status, accion);
+                 me.cerrarModal(); 
+                 console.log(response.status);
+              }else{
+                Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+                me.cerrarModal();
+              }
+            
+            })
+            .catch(function(error){
+               Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+            });
+            me.loader = false;
+        }else{
+            //para actualizar
+                axios.put(`/pedidos/update`,me.pedido)
+               .then(function(response) {
+                 if(response.status==202){
+                    me.verificarAccionDato(response.data, response.status, accion);
+                        me.cerrarModal();  
+                 }else{
+                    Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+                     me.cerrarModal();
+                 }
+              })
+          .catch(function(error) {
+            console.log(error);
+            me.loader = false;
+          });
+        }
+      
       }
     },
-    cambiarEstado(pedido,estado) {
+    deletePedido(pedido) {
       let me = this;
-      pedido.estado = estado;
+      me.editedPedido = me.arrayPedidos.indexOf(pedido);
+      
       const Toast = Vue.swal.mixin({
         toast: true,
-        position: "bottom-end",
-        showConfirmButton: true,
-        timer: 8000
-      });
-
-      Vue.swal({
-        title: "Esta Seguro/a de realiar esta acción?",
-        text:
-          "Una vez realizada la operación el registro desaparecerá de la tabla",
-        type: "question",
-        showCancelButton: true,
-        confirmButtonText: "Si",
-        cancelButtonText: "No",
-        reverseButtons: true,
-        focusConfirm: false,
-        focusCancel: true,
-        showCloseButton: true
-      }).then(result => {
-        if (result.value) {
-          me.loader = true;
-          axios
-            .put(`/pedidos/change`,pedido)
-            .then(function(response) {
-              me.loader = false;
-              if (response.status == 200) {
-                Vue.swal(
-                  "Confirmado",
-                  "La operación ha sido realizada con Exito",
-                  "success"
-                );
-                let estado = "R";
-                me.fetchPedidos(estado);   
-              }
-            })
-            .catch(function(error) {
-              console.log(error);  
-              me.loader = false;
-              Toast.fire({
-                type: "error",
-                title: "Ocurrio Un Error Intente Nuevamente"
-              });
-            });
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
-      });
+        });
+        //personalizando nueva confirmacion
+        Vue.swal.fire({
+        title: 'Eliminar Pedido',
+        text: "Una vez realizada la acción no se podra revertir !",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: "No"
+        }).then((result) => {
+        if (result.value) {
+            me.loader = true;
+            axios.post(`/pedidos/delete`, pedido)
+            .then(function(response) {
+                me.verificarAccionDato(response.data, response.status, "del");
+                me.loader = false;
+            })
+          }
+        });
+    },
+     verificarAccionDato(pedido, statusCode, accion) {
+      let me = this;
+      
+      const Toast = Vue.swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+        }); 
+      switch (accion) {
+        case "add":
+          //Agrego al array de horarios el objecto que devuelve el Backend
+          //me.arrayHorarios.unshift(horario);
+          this.fetchPedidos(); 
+          Toast.fire({
+            icon: 'success',
+            title: 'Pedido registrado con Exito'
+           });
+          me.loader = false;
+          break;
+        case "upd":
+          //Actualizo al array de horarios el objecto que devuelve el Backend ya con los datos actualizados
+          //Object.assign(me.arrayHorarios[me.editedHorario], horario);
+          this.fetchPedidos(); 
+          Toast.fire({
+            icon: 'success',
+            title: 'Pedido Actualizado con Exito'
+           }); 
+            
+          me.loader = false;
+          break;
+        case "del":
+          if (statusCode == 200) {
+            try {
+              //Se elimina del array de Horarios Activos si todo esta bien en el backend
+              me.arrayPedidos.splice(me.editedPedido, 1);
+              //Se Lanza mensaje Final
+              Toast.fire({
+                icon: 'success',
+                title: 'Pedido Eliminado!'
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          } else {
+             Toast.fire({
+                icon: 'error',
+                title: 'Ocurrió un error, intente de nuevo'
+              });
+          }
+          break;
+      }
     }
   },
   mounted() {
     let me = this;
-    me.fetchPedidos(me.estado);
+    me.fetchPedidos();
+    me.fetchCategorias();
+    me.fetchMarcas();
   }
 };
 </script>

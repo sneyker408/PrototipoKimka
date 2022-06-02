@@ -166,11 +166,10 @@ export default {
       arrayCategorias: [],
       hTBArticulos: [
         { text: "Código", value: "codigo" },
-        { text: "Nombre", value: "nombre" },
-        { text: "Talla", value: "talla" },
-        { text: "Descripción", value: "descripcion" },
-        { text: "Color", value: "color" },
         { text: "Categoria", value: "categoria" },
+        { text: "Talla", value: "talla" },
+        { text: "Color", value: "color" },
+        { text: "Descripción", value: "descripcion" },
         { text: "Precio", value: "precio" },
         { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],

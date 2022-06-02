@@ -43,7 +43,7 @@ class User extends Authenticatable
     ];
 
     //Relacion 1:N con prestamos
-    public function prestamos() {
+    public function pedidos() {
         return $this->hasMany(Prestamo::class,'id');
     }
 

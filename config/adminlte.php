@@ -66,7 +66,7 @@ return [
 
     'usermenu_enabled' => true,
     'usermenu_header' => true,
-    'usermenu_header_class' => '.bg-secondary',
+    'usermenu_header_class' => '.bg-dark',
     'usermenu_image' => true,
     'usermenu_desc' => true,
     'usermenu_profile_url' => true,
@@ -126,10 +126,10 @@ return [
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
-    'classes_content' => '',
+    'classes_content' => 'bg-dark',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_sidebar_nav' => 'bg-dark',
+    'classes_topnav' => 'bg-dark',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -194,7 +194,7 @@ return [
     'register_url' => 'register',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
-    'profile_url' => false,
+    'profile_url' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -229,10 +229,6 @@ return [
         
         ['header' => 'BARRA DE TRABAJO'],
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [
             'text' => 'Inicio',
             'url'  => '/admin',
             'icon'  => 'fas fa-home',
@@ -260,6 +256,8 @@ return [
                             'text'    => 'Articulos',
                             'icon'    => 'fas fw fa-brush',
                             'url'     => 'articulos',
+                            'label' => 'Nuevo',
+                            'label_color' => 'danger',
                         ],
                     ],        
                 ],
@@ -318,7 +316,13 @@ return [
                     'url'  => 'proveedores',
                 ],
             ],
-        ],      
+        ],  
+        [
+            
+            'text' => 'busqueda',
+            'search' => 'true',
+            'tovnav' => 'true', 
+        ],    
     ],
 
     /*

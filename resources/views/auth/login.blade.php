@@ -1,5 +1,5 @@
 @extends('adminlte::auth.login')
-@section('title', 'Iniciar sesión')
+@section('title', 'login')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
