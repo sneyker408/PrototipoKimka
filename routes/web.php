@@ -23,19 +23,157 @@ use App\Http\Controllers\VentaController;
 |
 */
 
+//Retorno de una vista
 Route::get('/', function () {
     return view('welcome');
 });
 
+/**
+ * Rutas para categorias
+ */
+
+Route::get('/categorias',[CategoriaController::class,'index'])->name("categorias");
+
+Route::get('/categorias/all',[CategoriaController::class,'show']);
+
+Route::post('/categorias/save',[CategoriaController::class,'store']);
+
+Route::put('/categorias/update',[CategoriaController::class,'update']);
+
+Route::post('/categorias/delete',[CategoriaController::class,'destroy']);
+
+
+/**
+ * Rutas para clientes
+ */
+
+Route::get('/clientes',[clienteController::class,'index'])->name("clientes");
+
+Route::get('/clientes/all',[clienteController::class,'show']);
+
+Route::post('/clientes/save',[clienteController::class,'store']);
+
+Route::put('/clientes/update',[clienteController::class,'update']);
+
+Route::post('/clientes/delete',[clienteController::class,'destroy']);
+
+
+/**
+ * Rutas para articulos
+ */
+
+Route::get('/articulos',[ArticuloController::class,'index'])->name("articulos");
+
+Route::get('/articulos/all',[ArticuloController::class,'show']);
+
+Route::post('/articulos/save',[ArticuloController::class,'store']);
+
+Route::put('/articulos/update',[ArticuloController::class,'update']);
+
+Route::post('/articulos/delete',[ArticuloController::class,'destroy']);
+
+Route::get('/articulos/pdf',[PDFController::class,'pdfArticulos'])->name('pdfArticulos');
+
+
+/**
+ * Rutas para colores
+ */
+
+Route::get('/colores',[ColorController::class,'index'])->name("colores");
+
+Route::get('/colores/all',[ColorController::class,'show']);
+
+Route::post('/colores/save',[ColorController::class,'store']);
+
+Route::put('/colores/update',[ColorController::class,'update']);
+
+Route::post('/colores/delete',[ColorController::class,'destroy']);
+
+
+/**
+ * Rutas para compras
+ */
+
+Route::get('/compras',[CompraController::class,'index'])->name("compras");
+
+Route::get('/compras/all',[CompraController::class,'show']);
+
+Route::post('/compras/save',[CompraController::class,'store']);
+
+Route::put('/compras/update',[CompraController::class,'update']);
+
+Route::post('/compras/delete',[CompraController::class,'destroy']);
+
+
+/**
+ * Rutas para creaciones
+ */
+
+Route::get('/creaciones',[CreacionController::class,'index'])->name("creaciones");
+
+Route::get('/creaciones/all',[CreacionController::class,'show']);
+
+Route::post('/creaciones/save',[CreacionController::class,'store']);
+
+Route::put('/creaciones/update',[CreacionController::class,'update']);
+
+Route::post('/creaciones/delete',[CreacionController::class,'destroy']);
+
+
+/**
+ * Rutas para pedidos
+ */
+
+Route::get('/pedidos',[PedidoController::class,'index'])->name("reservas");
+
+Route::get('/pedidos/state',[PedidoController::class,'show']);
+
+Route::post('/pedidos/save',[PedidoController::class,'store']);
+
+Route::put('/pedidos/change',[PedidoController::class,'changeState']);
+
+
+/**
+ * Rutas para proveedores
+ */
+
+Route::get('/proveedores',[ProveedorController::class,'index'])->name("proveedores");
+
+Route::get('/proveedores/all',[ProveedorController::class,'show']);
+
+Route::post('/proveedores/save',[ProveedorController::class,'store']);
+
+Route::put('/proveedores/update',[ProveedorController::class,'update']);
+
+Route::post('/proveedores/delete',[ProveedorController::class,'destroy']);
+
+
+/**
+ * Rutas para ventas
+ */
+
+Route::get('/ventas',[VentaController::class,'index'])->name("ventas");
+
+Route::get('/ventas/all',[VentaController::class,'show']);
+
+Route::post('/ventas/save',[VentaController::class,'store']);
+
+Route::put('/ventas/update',[VentaController::class,'update']);
+
+Route::post('/ventas/delete',[VentaController::class,'destroy']);
+
+
+/**
+ * Rutas para home
+ */
+
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/categorias',[App\Http\Controllers\CategoriaController::class,'index'])->name("categorias");
-Route::get('/clientes',[App\Http\Controllers\ClienteController::class,'index'])->name("clientes");
-Route::get('/articulos',[App\Http\Controllers\ArticuloController::class,'index'])->name("articulos");
-Route::get('/colores',[App\Http\Controllers\ColorController::class,'index'])->name("colores");
-Route::get('/compras',[App\Http\Controllers\CompraController::class,'index'])->name("compras");
-Route::get('/creaciones',[App\Http\Controllers\CreacionController::class,'index'])->name("creaciones");
-Route::get('/pedidos',[App\Http\Controllers\PedidoController::class,'index'])->name("pedidos");
-Route::get('/proveedores',[App\Http\Controllers\ProveedorController::class,'index'])->name("proveedores");
-Route::get('/ventas',[App\Http\Controllers\VentaController::class,'index'])->name("ventas");
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/reportes',[ReporteController::class,'index'])->name("reportes");

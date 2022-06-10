@@ -5526,7 +5526,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -7350,6 +7349,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -8220,6 +8255,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -8237,7 +8275,7 @@ __webpack_require__.r(__webpack_exports__);
         value: "correo"
       }, {
         text: "Telefono",
-        value: "talla"
+        value: "telefono"
       }],
       loader: false,
       search: "",
@@ -32390,117 +32428,80 @@ var render = function () {
                                               _vm._v(" "),
                                               _c("v-text-field", {
                                                 attrs: {
-                                                  "append-icon": "laptop",
+                                                  "append-icon":
+                                                    "mdi-egg-easter",
                                                   rules: [
                                                     function (v) {
                                                       return (
                                                         !!v ||
-                                                        "Nombre Es Requerido"
+                                                        "Producto Es Requerido"
                                                       )
                                                     },
                                                   ],
-                                                  label: "Nombre",
+                                                  label: "Producto",
                                                   required: "",
                                                   "error-messages":
-                                                    _vm.errorsNombre,
+                                                    _vm.errorsProducto,
                                                 },
                                                 on: {
                                                   keyup: function ($event) {
-                                                    _vm.errorsNombre = []
+                                                    _vm.errorsProducto = []
                                                   },
                                                 },
                                                 model: {
-                                                  value: _vm.articulo.nombre,
+                                                  value: _vm.articulo.producto,
                                                   callback: function ($$v) {
                                                     _vm.$set(
                                                       _vm.articulo,
-                                                      "nombre",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "articulo.nombre",
-                                                },
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-textarea", {
-                                                attrs: {
-                                                  label: "Descripción",
-                                                  "no-resize": "",
-                                                  rows: "2",
-                                                  rules: [
-                                                    function (v) {
-                                                      return (
-                                                        !!v ||
-                                                        "Descripcion Es Requerido"
-                                                      )
-                                                    },
-                                                  ],
-                                                  required: "",
-                                                  "error-messages":
-                                                    _vm.errorsNombre,
-                                                },
-                                                on: {
-                                                  keyup: function ($event) {
-                                                    _vm.errorsNombre = []
-                                                  },
-                                                },
-                                                model: {
-                                                  value:
-                                                    _vm.articulo.descripcion,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.articulo,
-                                                      "descripcion",
+                                                      "producto",
                                                       $$v
                                                     )
                                                   },
                                                   expression:
-                                                    "articulo.descripcion",
+                                                    "articulo.producto",
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  "append-icon":
+                                                    "mdi-led-strip",
+                                                  label: "Talla",
+                                                },
+                                                model: {
+                                                  value: _vm.articulo.talla,
+                                                  callback: function ($$v) {
+                                                    _vm.$set(
+                                                      _vm.articulo,
+                                                      "talla",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression: "articulo.talla",
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  "append-icon": "mdi-color",
+                                                  label: "Color",
+                                                },
+                                                model: {
+                                                  value: _vm.articulo.color,
+                                                  callback: function ($$v) {
+                                                    _vm.$set(
+                                                      _vm.articulo,
+                                                      "color",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression: "articulo.color",
                                                 },
                                               }),
                                               _vm._v(" "),
                                               _c(
                                                 "v-row",
                                                 [
-                                                  _c(
-                                                    "v-col",
-                                                    {
-                                                      attrs: {
-                                                        cols: "12",
-                                                        md: "6",
-                                                      },
-                                                    },
-                                                    [
-                                                      _c("v-select", {
-                                                        attrs: {
-                                                          items:
-                                                            _vm.arrayMarcas,
-                                                          label:
-                                                            "Seleccione Marca",
-                                                          "item-value": "id",
-                                                          "item-text": "nombre",
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.articulo
-                                                              .marca_id,
-                                                          callback: function (
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.articulo,
-                                                              "marca_id",
-                                                              $$v
-                                                            )
-                                                          },
-                                                          expression:
-                                                            "articulo.marca_id",
-                                                        },
-                                                      }),
-                                                    ],
-                                                    1
-                                                  ),
-                                                  _vm._v(" "),
                                                   _c(
                                                     "v-col",
                                                     {
@@ -32542,6 +32543,43 @@ var render = function () {
                                                 ],
                                                 1
                                               ),
+                                              _vm._v(" "),
+                                              _c("v-textarea", {
+                                                attrs: {
+                                                  label: "Descripción",
+                                                  "no-resize": "",
+                                                  rows: "2",
+                                                  rules: [
+                                                    function (v) {
+                                                      return (
+                                                        !!v ||
+                                                        "Descripcion Es Requerido"
+                                                      )
+                                                    },
+                                                  ],
+                                                  required: "",
+                                                  "error-messages":
+                                                    _vm.errorsNombre,
+                                                },
+                                                on: {
+                                                  keyup: function ($event) {
+                                                    _vm.errorsNombre = []
+                                                  },
+                                                },
+                                                model: {
+                                                  value:
+                                                    _vm.articulo.descripcion,
+                                                  callback: function ($$v) {
+                                                    _vm.$set(
+                                                      _vm.articulo,
+                                                      "descripcion",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "articulo.descripcion",
+                                                },
+                                              }),
                                             ],
                                             1
                                           ),
@@ -32786,7 +32824,7 @@ var render = function () {
               "v-card-title",
               [
                 _vm._v(
-                  "\n        Listado de Categorias de Articulos\n        "
+                  "\n        Listado de Categorias de Productos\n        "
                 ),
                 _c("div", { staticClass: "flex-grow-1" }),
                 _vm._v(" "),
@@ -34684,15 +34722,155 @@ var render = function () {
                                                 attrs: {
                                                   "append-icon":
                                                     "mdi-folder-outline",
+                                                  label: "Articulo",
+                                                },
+                                                model: {
+                                                  value:
+                                                    _vm.articulo.articulo_id,
+                                                  callback: function ($$v) {
+                                                    _vm.$set(
+                                                      _vm.articulo,
+                                                      "articulo_id",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "articulo.articulo_id",
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  "append-icon":
+                                                    "mdi-egg-easter",
                                                   rules: [
                                                     function (v) {
                                                       return (
                                                         !!v ||
-                                                        "Nombre Es Requerido"
+                                                        "Producto Es Requerido"
                                                       )
                                                     },
                                                   ],
-                                                  label: "Nombre",
+                                                  label: "Descripcion",
+                                                  required: "",
+                                                  "error-messages":
+                                                    _vm.errorsProducto,
+                                                },
+                                                on: {
+                                                  keyup: function ($event) {
+                                                    _vm.errorsProducto = []
+                                                  },
+                                                },
+                                                model: {
+                                                  value:
+                                                    _vm.articulo.Descripcion,
+                                                  callback: function ($$v) {
+                                                    _vm.$set(
+                                                      _vm.articulo,
+                                                      "Descripcion",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "articulo.Descripcion",
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  "append-icon":
+                                                    "mdi-led-strip",
+                                                  label: "Color",
+                                                },
+                                                model: {
+                                                  value: _vm.articulo.color,
+                                                  callback: function ($$v) {
+                                                    _vm.$set(
+                                                      _vm.articulo,
+                                                      "color",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression: "articulo.color",
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  "append-icon": "mdi-color",
+                                                  label: "Cantidad",
+                                                },
+                                                model: {
+                                                  value: _vm.articulo.color,
+                                                  callback: function ($$v) {
+                                                    _vm.$set(
+                                                      _vm.articulo,
+                                                      "color",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression: "articulo.color",
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-row",
+                                                [
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
+                                                    },
+                                                    [
+                                                      _c("v-select", {
+                                                        attrs: {
+                                                          items:
+                                                            _vm.arrayCategorias,
+                                                          label:
+                                                            "Seleccione Categoria",
+                                                          "item-value": "id",
+                                                          "item-text": "nombre",
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.articulo
+                                                              .categoria_id,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.articulo,
+                                                              "categoria_id",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "articulo.categoria_id",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c("v-textarea", {
+                                                attrs: {
+                                                  label: "Descripción",
+                                                  "no-resize": "",
+                                                  rows: "2",
+                                                  rules: [
+                                                    function (v) {
+                                                      return (
+                                                        !!v ||
+                                                        "Descripcion Es Requerido"
+                                                      )
+                                                    },
+                                                  ],
                                                   required: "",
                                                   "error-messages":
                                                     _vm.errorsNombre,
@@ -34703,15 +34881,17 @@ var render = function () {
                                                   },
                                                 },
                                                 model: {
-                                                  value: _vm.creacion.nombre,
+                                                  value:
+                                                    _vm.articulo.descripcion,
                                                   callback: function ($$v) {
                                                     _vm.$set(
-                                                      _vm.creacion,
-                                                      "nombre",
+                                                      _vm.articulo,
+                                                      "descripcion",
                                                       $$v
                                                     )
                                                   },
-                                                  expression: "creacion.nombre",
+                                                  expression:
+                                                    "articulo.descripcion",
                                                 },
                                               }),
                                             ],
@@ -35579,7 +35759,11 @@ var render = function () {
                 _c("div", { staticClass: "flex-grow-1" }),
                 _vm._v(" "),
                 _c("v-text-field", {
-                  attrs: { label: "Buscar Proveedor", "hide-details": "" },
+                  attrs: {
+                    label: "Buscar Proveedor",
+                    "append-icon": "mdi-database-search",
+                    "hide-details": "",
+                  },
                   model: {
                     value: _vm.search,
                     callback: function ($$v) {
@@ -35733,26 +35917,7 @@ var render = function () {
                                             [
                                               _c("v-text-field", {
                                                 attrs: {
-                                                  "append-icon":
-                                                    "mdi-folder-outline",
-                                                  label: "Código",
-                                                },
-                                                model: {
-                                                  value: _vm.cliente.codigo,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.cliente,
-                                                      "codigo",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "cliente.codigo",
-                                                },
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  "append-icon": "laptop",
+                                                  "append-icon": "mdi-account",
                                                   rules: [
                                                     function (v) {
                                                       return (
@@ -35784,22 +35949,21 @@ var render = function () {
                                                 },
                                               }),
                                               _vm._v(" "),
-                                              _c("v-textarea", {
+                                              _c("v-text-field", {
                                                 attrs: {
-                                                  label: "Descripción",
-                                                  "no-resize": "",
-                                                  rows: "2",
+                                                  "append-icon": "mdi-mail-ru",
                                                   rules: [
                                                     function (v) {
                                                       return (
                                                         !!v ||
-                                                        "Descripcion Es Requerido"
+                                                        "Correo Es Requerido"
                                                       )
                                                     },
                                                   ],
+                                                  label: "Correo",
                                                   required: "",
                                                   "error-messages":
-                                                    _vm.errorsNombre,
+                                                    _vm.errorsCorreo,
                                                 },
                                                 on: {
                                                   keyup: function ($event) {
@@ -35807,17 +35971,51 @@ var render = function () {
                                                   },
                                                 },
                                                 model: {
-                                                  value:
-                                                    _vm.cliente.descripcion,
+                                                  value: _vm.cliente.correo,
                                                   callback: function ($$v) {
                                                     _vm.$set(
                                                       _vm.cliente,
-                                                      "descripcion",
+                                                      "correo",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression: "cliente.correo",
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  "append-icon":
+                                                    "mdi-account-box",
+                                                  rules: [
+                                                    function (v) {
+                                                      return (
+                                                        !!v ||
+                                                        "Telefono Es Requerido"
+                                                      )
+                                                    },
+                                                  ],
+                                                  label: "Telefono",
+                                                  required: "",
+                                                  "error-messages":
+                                                    _vm.errorsTelefono,
+                                                },
+                                                on: {
+                                                  keyup: function ($event) {
+                                                    _vm.errorstelfono = []
+                                                  },
+                                                },
+                                                model: {
+                                                  value: _vm.cliente.telefono,
+                                                  callback: function ($$v) {
+                                                    _vm.$set(
+                                                      _vm.cliente,
+                                                      "telefono",
                                                       $$v
                                                     )
                                                   },
                                                   expression:
-                                                    "cliente.descripcion",
+                                                    "cliente.telefono",
                                                 },
                                               }),
                                               _vm._v(" "),
@@ -35835,28 +36033,30 @@ var render = function () {
                                                     [
                                                       _c("v-select", {
                                                         attrs: {
+                                                          "append-icon":
+                                                            " mdi-menu-down",
                                                           items:
-                                                            _vm.arrayMarcas,
+                                                            _vm.arrayColores,
                                                           label:
-                                                            "Seleccione Marca",
+                                                            "Seleccione Color ",
                                                           "item-value": "id",
                                                           "item-text": "nombre",
                                                         },
                                                         model: {
                                                           value:
                                                             _vm.cliente
-                                                              .marca_id,
+                                                              .color_id,
                                                           callback: function (
                                                             $$v
                                                           ) {
                                                             _vm.$set(
                                                               _vm.cliente,
-                                                              "marca_id",
+                                                              "color_id",
                                                               $$v
                                                             )
                                                           },
                                                           expression:
-                                                            "cliente.marca_id",
+                                                            "cliente.color_id",
                                                         },
                                                       }),
                                                     ],

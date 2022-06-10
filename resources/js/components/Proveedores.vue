@@ -8,7 +8,7 @@
         <v-card-title>
           Inventario de Proveedores
           <div class="flex-grow-1"></div>
-          <v-text-field v-model="search" label="Buscar Proveedor" hide-details></v-text-field>
+          <v-text-field v-model="search" label="Buscar Proveedor" append-icon="mdi-database-search" hide-details></v-text-field>
         </v-card-title>
         <v-data-table
           :headers="hTBProveedores"
@@ -45,14 +45,8 @@
                   <v-card-text>
                     <v-container>
                       <v-form ref="formProveedor" v-model="validForm" :lazy-validation="true">
-                        <v-text-field
-                          append-icon="mdi-folder-outline"
-                          v-model="cliente.codigo"
-                          label="Código"
-
-                        ></v-text-field>
                          <v-text-field
-                          append-icon="laptop"
+                          append-icon="mdi-account"
                           v-model="cliente.nombre"
                           @keyup="errorsNombre = []"
                           :rules="[v => !!v || 'Nombre Es Requerido']"
@@ -60,22 +54,31 @@
                           required
                           :error-messages="errorsNombre"
                         ></v-text-field>
-                         <v-textarea                          
-                          label="Descripción" 
-                          no-resize
-                          rows="2" 
-                          v-model="cliente.descripcion" 
+                        <v-text-field
+                          append-icon="mdi-mail-ru"
+                          v-model="cliente.correo"
                           @keyup="errorsNombre = []"
-                          :rules="[v => !!v || 'Descripcion Es Requerido']"
+                          :rules="[v => !!v || 'Correo Es Requerido']"
+                          label="Correo"
                           required
-                          :error-messages="errorsNombre"                       
-                        ></v-textarea>
+                          :error-messages="errorsCorreo"
+                        ></v-text-field>
+                         <v-text-field
+                          append-icon="mdi-account-box"
+                          v-model="cliente.telefono"
+                          @keyup="errorstelfono = []"
+                          :rules="[v => !!v || 'Telefono Es Requerido']"
+                          label="Telefono"
+                          required
+                          :error-messages="errorsTelefono"
+                        ></v-text-field>
                         <v-row>
                           <v-col cols="12" md="6">
                             <v-select
-                                v-model="cliente.marca_id"
-                                :items="arrayMarcas"
-                                label="Seleccione Marca"
+                                  append-icon=" mdi-menu-down"
+                                v-model="cliente.color_id"
+                                :items="arrayColores"
+                                label="Seleccione Color "
                                 item-value="id"
                                 item-text="nombre"
                                 ></v-select>
@@ -168,7 +171,7 @@ export default {
         { text: "Código", value: "codigo" },
         { text: "Nombre", value: "nombre" },
         { text: "Correo electronico", value: "correo" },
-        { text: "Telefono", value: "talla" },
+        { text: "Telefono", value: "telefono" },
       ],
       loader: false,
       search: "",

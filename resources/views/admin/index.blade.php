@@ -1,13 +1,12 @@
 @extends('adminlte::page')
 
-@section('title', 'Principal')
+@section('title', 'Creaciones')
 
 @section('content_header')
-    <h1>Sistema de Inventario </h1>
+    <h1>Creaciones</h1>
 @stop
 
 @section('content')
-
 <div class="card" style="width: 18rem;">
   <img src="https://www.ecommercenews.pe/wp-content/uploads/2017/07/tienda-online.png" class="card-img-top" alt="...">
   <div class="card-body">
@@ -60,9 +59,11 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    <!-- <link rel="stylesheet" href="/css/admin_custom.css"> -->
+    <link href="{{asset('css/app.css')}}" rel="stylesheet">
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
+    <!-- <script> console.log('Hi!'); </script> -->
+    <script src="{{asset('js/app.js')}}"></script>
 @stop

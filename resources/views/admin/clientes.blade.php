@@ -8,7 +8,9 @@
 
 @section('content')
     <div id="app">
-        <Clientes></Clientes>
+        <v-app>
+            <Clientes></Clientes>
+        </v-app>
     </div>
 @stop
 

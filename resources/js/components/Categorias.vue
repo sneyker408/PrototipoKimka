@@ -6,7 +6,7 @@
       </v-overlay>
       <v-card>
         <v-card-title>
-          Listado de Categorias de Articulos
+          Listado de Categorias de Productos
           <div class="flex-grow-1"></div>
           <v-text-field v-model="search" label="Buscar Categoria" hide-details></v-text-field>
         </v-card-title>

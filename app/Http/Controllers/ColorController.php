@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Color;
 use Illuminate\Http\Request;
 
+
 class ColorController extends Controller
 {
     /**
@@ -35,51 +36,64 @@ class ColorController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Color  $color
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Color $color)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Color  $color
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Color $color)
-    {
-        //
+        try {
+            $color = new Color();
+            $color->nombre = $request->nombre;
+            $color->save();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Color  $color
+     * @param  int  $id
      * @return \Illuminate\Http\Response
+     * 
+     * Actualizar colores
      */
-    public function update(Request $request, Color $color)
+    public function update(Request $request)
     {
-        //
+        try {
+            $color = Color::findORFail($request->id);
+            $color->nombre = $request->nombre;
+            $color->save();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Color  $color
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return \Illuminate\Http\
+     * 
+     * Eliminar cateogrias
      */
-    public function destroy(Color $color)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            $color = Color::findORFail($request->id);
+            $color->delete();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function show()
+    {
+        try {
+            $colores = Color::orderBy('id','DESC')->get();
+            return $colores;
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }

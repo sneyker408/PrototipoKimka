@@ -41,15 +41,51 @@
                   <v-card-text>
                     <v-container>
                       <v-form ref="formCreacion" v-model="validForm" :lazy-validation="true">
-                        <v-text-field
+                       <v-text-field
                           append-icon="mdi-folder-outline"
-                          v-model="creacion.nombre"
-                          @keyup="errorsNombre = []"
-                          :rules="[v => !!v || 'Nombre Es Requerido']"
-                          label="Nombre"
-                          required
-                          :error-messages="errorsNombre"
+                          v-model="articulo.articulo_id"
+                          label="Articulo"
                         ></v-text-field>
+                        <v-text-field
+                          append-icon="mdi-egg-easter"
+                          v-model="articulo.Descripcion"
+                          @keyup="errorsProducto = []"
+                          :rules="[v => !!v || 'Producto Es Requerido']"
+                          label="Descripcion"
+                          required
+                          :error-messages="errorsProducto"
+                        ></v-text-field>
+                         <v-text-field
+                          append-icon="mdi-led-strip"
+                          v-model="articulo.color"
+                          label="Color"
+                        ></v-text-field>
+                        <v-text-field
+                          append-icon="mdi-color"
+                          v-model="articulo.color"
+                          label="Cantidad"
+                        ></v-text-field>
+                        <v-row>
+                          <v-col cols="12" md="6">
+                            <v-select
+                                v-model="articulo.categoria_id"
+                                :items="arrayCategorias"
+                                label="Seleccione Categoria"
+                                item-value="id"
+                                item-text="nombre"
+                                ></v-select>
+                          </v-col>
+                        </v-row>
+                         <v-textarea                          
+                          label="Descripción" 
+                          no-resize
+                          rows="2" 
+                          v-model="articulo.descripcion" 
+                          @keyup="errorsNombre = []"
+                          :rules="[v => !!v || 'Descripcion Es Requerido']"
+                          required
+                          :error-messages="errorsNombre"                       
+                        ></v-textarea>
                         
                       </v-form>
                     </v-container>

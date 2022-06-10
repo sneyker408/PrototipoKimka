@@ -49,37 +49,27 @@
                           append-icon="mdi-folder-outline"
                           v-model="articulo.codigo"
                           label="Código"
-
+                        ></v-text-field>
+                        <v-text-field
+                          append-icon="mdi-egg-easter"
+                          v-model="articulo.producto"
+                          @keyup="errorsProducto = []"
+                          :rules="[v => !!v || 'Producto Es Requerido']"
+                          label="Producto"
+                          required
+                          :error-messages="errorsProducto"
                         ></v-text-field>
                          <v-text-field
-                          append-icon="laptop"
-                          v-model="articulo.nombre"
-                          @keyup="errorsNombre = []"
-                          :rules="[v => !!v || 'Nombre Es Requerido']"
-                          label="Nombre"
-                          required
-                          :error-messages="errorsNombre"
+                          append-icon="mdi-led-strip"
+                          v-model="articulo.talla"
+                          label="Talla"
                         ></v-text-field>
-                         <v-textarea                          
-                          label="Descripción" 
-                          no-resize
-                          rows="2" 
-                          v-model="articulo.descripcion" 
-                          @keyup="errorsNombre = []"
-                          :rules="[v => !!v || 'Descripcion Es Requerido']"
-                          required
-                          :error-messages="errorsNombre"                       
-                        ></v-textarea>
+                        <v-text-field
+                          append-icon="mdi-color"
+                          v-model="articulo.color"
+                          label="Color"
+                        ></v-text-field>
                         <v-row>
-                          <v-col cols="12" md="6">
-                            <v-select
-                                v-model="articulo.marca_id"
-                                :items="arrayMarcas"
-                                label="Seleccione Marca"
-                                item-value="id"
-                                item-text="nombre"
-                                ></v-select>
-                          </v-col>
                           <v-col cols="12" md="6">
                             <v-select
                                 v-model="articulo.categoria_id"
@@ -90,7 +80,16 @@
                                 ></v-select>
                           </v-col>
                         </v-row>
-                      
+                         <v-textarea                          
+                          label="Descripción" 
+                          no-resize
+                          rows="2" 
+                          v-model="articulo.descripcion" 
+                          @keyup="errorsNombre = []"
+                          :rules="[v => !!v || 'Descripcion Es Requerido']"
+                          required
+                          :error-messages="errorsNombre"                       
+                        ></v-textarea>
                       </v-form>
                     </v-container>
                   </v-card-text>

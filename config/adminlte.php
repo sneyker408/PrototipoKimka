@@ -85,9 +85,9 @@ return [
 
     'layout_topnav' => true,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
-    'layout_fixed_footer' => true,
+    'layout_fixed_sidebar' => true,
+    'layout_fixed_navbar' => true,
+    'layout_fixed_footer' => false,
     'layout_dark_mode' => true,
 
     /*
@@ -102,12 +102,12 @@ return [
     |
     */
 
-    'classes_auth_card' => 'bg-gradient-dark',
+    'classes_auth_card' => 'card-outline card-primary',
     'classes_auth_header' => '',
-    'classes_auth_body' => 'bg-gradient-dark',
-    'classes_auth_footer' => 'text-center',
-    'classes_auth_icon' => 'fa-fw text-light',
-    'classes_auth_btn' => 'btn-flat btn-light',
+    'classes_auth_body' => '',
+    'classes_auth_footer' => '',
+    'classes_auth_icon' => '',
+    'classes_auth_btn' => 'btn-flat btn-primary',
 
     /*
     |--------------------------------------------------------------------------
@@ -126,9 +126,9 @@ return [
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
-    'classes_content' => 'bg-dark',
+    'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => 'bg-dark',
+    'classes_sidebar_nav' => '',
     'classes_topnav' => 'bg-dark',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
@@ -188,7 +188,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'admin',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -229,101 +229,86 @@ return [
         
         ['header' => 'BARRA DE TRABAJO'],
         [
-            'text' => 'Inicio',
-            'url'  => '/admin',
-            'icon'  => 'fas fa-home',
+            'text'    => 'Creaciones',
+            'icon'    => 'fas fw fa-brush',
+            'url'     => 'creaciones',
+        ],
+        [
+            'text'    => 'Articulos',
+            'icon'    => 'fas fw fa-brush',
+            'url'     => 'articulos',
+        ],
+        [
+            'text' => ' Gestion de Pedidos',
+            'icon'    => 'fas fw fa-box',
+            'url'  => 'pedidos',
+        ],
+        [
+            'text' => 'Compras',
+            'icon'    => 'fas fw fa-store',
+            'url'  => 'compras',
+        ],
+        [
+            'text' => 'Ventas',
+            'icon'    => 'fas fw fa-coins',
+            'url'  => 'ventas',
         ],
         [
             'text'    => 'Catalogos',
             'icon'    => 'fab fa-unsplash',
             'submenu' => [
                 [
+                    'text' => 'Inicio',
+                    'url'  => '/admin',
+                    'icon'  => 'fas fa-home',
+                ],
+                [
                     'text' => 'Categorias',
                     'icon'    => 'fas fw fa-certificate',
                     'url'  => 'categorias',
-                ],
-                [
-                    'text' => 'Productos',
-                    'icon'    => 'fas fw fa-gift',
-                    'submenu' => [
-                        
-                        [
-                            'text'    => 'Creaciones',
-                            'icon'    => 'fas fw fa-brush',
-                            'url'     => 'creaciones',
-                        ],
-                        [
-                            'text'    => 'Articulos',
-                            'icon'    => 'fas fw fa-brush',
-                            'url'     => 'articulos',
-                            'label' => 'Nuevo',
-                            'label_color' => 'danger',
-                        ],
-                    ],        
-                ],
+                ],    
                 [
                     'text' => 'Colores',
                     'icon'    => 'fas fw fa-adjust',
                     'url'  => 'colores',
                 ],
+                ['header' => 'Proceso de Administracion'],
                 [
-                    'text' => ' Gestion de Pedidos',
-                    'icon'    => 'fas fw fa-box',
-                    'url'  => 'pedidos',
-                ],
-                [
-                    'text' => 'Compras',
-                    'icon'    => 'fas fw fa-store',
-                    'url'  => 'compras',
-                ],
-                [
-                    'text' => 'Ventas',
-                    'icon'    => 'fas fw fa-coins',
-                    'url'  => 'ventas',
-                ],
-            ],
-        ],
-        ['header' => 'CONFIGURACION DE LA CUENTA'],
-        [
-            'text' => 'Cuenta',
-            'icon' => 'fas fa-fw fa-portrait',
-            'submenu' => [
-                [
-                    'text' => 'Perfil',
-                    'url'  => 'admin/settings',
-                    'icon' => 'fas fa-fw fa-user',
-                ],
-                [
-                    'text' => 'Cambiar Contraseña',
-                    'url'  => 'admin/settings',
-                    'icon' => 'fas fa-fw fa-lock',
+                    'text' => 'personas',
+                    'icon' => 'fas fw fa-user',
+                    'submenu' => [
+                        [
+                            'text' => 'Clientes',
+                            'icon'    => 'fas fw fa-user',
+                            'url'  => 'clientes',
+                        ],
+                        [
+                            'text' => 'Proveedores',
+                            'icon'    => 'fas fw fa-user',
+                            'url'  => 'proveedores',
+                        ],
+                    ],
+                ],  
+                ['header' => 'CONFIGURACION DE LA CUENTA'],
+                        [
+                    'text' => 'Cuenta',
+                    'icon' => 'fas fa-fw fa-portrait',
+                    'submenu' => [
+                        [
+                            'text' => 'Perfil',
+                            'url'  => 'admin/settings',
+                            'icon' => 'fas fa-fw fa-user',
+                        ],
+                        [
+                            'text' => 'Cambiar Contraseña',
+                            'url'  => 'admin/settings',
+                            'icon' => 'fas fa-fw fa-lock',
+                        ],        
                 ],
             ],
         ], 
-        ['header' => 'Proceso de Administracion'],
-        [
-            'text' => 'personas',
-            'icon' => 'fas fw fa-user',
-            'submenu' => [
-                [
-                    'text' => 'Clientes',
-                    'icon'    => 'fas fw fa-user',
-                    'url'  => 'clientes',
-                ],
-                [
-                    'text' => 'Proveedores',
-                    'icon'    => 'fas fw fa-user',
-                    'url'  => 'proveedores',
-                ],
-            ],
-        ],  
-        [
-            
-            'text' => 'busqueda',
-            'search' => 'true',
-            'tovnav' => 'true', 
-        ],    
     ],
+],
 
     /*
     |--------------------------------------------------------------------------

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 
+
 class ClienteController extends Controller
 {
     /**
@@ -35,51 +36,66 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cliente $cliente)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cliente $cliente)
-    {
-        //
+        try {
+            $cliente = new Cliente();
+            $cliente->nombre = $request->nombre;
+            $cliente->telefono = $request->telefono;
+            $cliente->save();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cliente  $cliente
+     * @param  int  $id
      * @return \Illuminate\Http\Response
+     * 
+     * Actualizar clientes
      */
-    public function update(Request $request, Cliente $cliente)
+    public function update(Request $request)
     {
-        //
+        try {
+            $cliente = Cliente::findORFail($request->id);
+            $cliente->nombre = $request->nombre;
+            $cliente->telefono = $request->telefono;
+            $cliente->save();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return \Illuminate\Http\
+     * 
+     * Eliminar cateogrias
      */
-    public function destroy(Cliente $cliente)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            $cliente = Cliente::findORFail($request->id);
+            $cliente->delete();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function show()
+    {
+        try {
+            $clientes = Cliente::orderBy('id','DESC')->get();
+            return $clientes;
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
