@@ -45,30 +45,6 @@
                   <v-card-text>
                     <v-container>
                       <v-form ref="formArticulo" v-model="validForm" :lazy-validation="true">
-                        <v-text-field
-                          append-icon="mdi-folder-outline"
-                          v-model="articulo.codigo"
-                          label="Código"
-                        ></v-text-field>
-                        <v-text-field
-                          append-icon="mdi-egg-easter"
-                          v-model="articulo.producto"
-                          @keyup="errorsProducto = []"
-                          :rules="[v => !!v || 'Producto Es Requerido']"
-                          label="Producto"
-                          required
-                          :error-messages="errorsProducto"
-                        ></v-text-field>
-                         <v-text-field
-                          append-icon="mdi-led-strip"
-                          v-model="articulo.talla"
-                          label="Talla"
-                        ></v-text-field>
-                        <v-text-field
-                          append-icon="mdi-color"
-                          v-model="articulo.color"
-                          label="Color"
-                        ></v-text-field>
                         <v-row>
                           <v-col cols="12" md="6">
                             <v-select
@@ -77,19 +53,57 @@
                                 label="Seleccione Categoria"
                                 item-value="id"
                                 item-text="nombre"
-                                ></v-select>
+                                @keyup="errorsCategoria = []"
+                                :rules="[v => !!v || 'Categoria Es Requerida']"
+                                required
+                                :error-messages="errorsCategoria"   
+                            ></v-select>
+                          </v-col>
+                          <v-col cols="12" md="6">
+                            <v-select
+                                v-model="articulo.color_id"
+                                :items="arrayColores"
+                                label="Seleccione Color"
+                                item-value="id"
+                                item-text="nombre"
+                            ></v-select>
                           </v-col>
                         </v-row>
-                         <v-textarea                          
-                          label="Descripción" 
+                        <v-text-field
+                          append-icon="mdi-key-outline"
+                          v-model="articulo.codigo"
+                          label="Código"
+                        ></v-text-field>                        
+                         <v-text-field
+                          append-icon="mdi-ruler-square"
+                          v-model="articulo.talla"
+                          label="Talla"
+                        ></v-text-field>
+                         <v-text-field
+                          append-icon="mdi-alpha-d-circle"
+                          v-model="articulo.descripcion"
+                          label="descripción"
+                        ></v-text-field>
+                        <v-text-field
+                          append-icon="mdi-notebook-multiple"
+                          v-model="articulo.existencia"
+                          @keyup="errorsExistencia = []"
+                          :rules="[v => !!v || 'La Existencia Es Requerida']"
+                          label="Existencia"
+                          required
+                          :error-messages="errorsProducto"
+                        ></v-text-field>
+                        <v-text-field         
+                         append-icon="mdi-currency-usd"                 
+                          label="Precio" 
                           no-resize
                           rows="2" 
-                          v-model="articulo.descripcion" 
-                          @keyup="errorsNombre = []"
-                          :rules="[v => !!v || 'Descripcion Es Requerido']"
+                          v-model="articulo.precio" 
+                          @keyup="errorsPrecio = []"
+                          :rules="[v => !!v || 'Precio Es Requerido']"
                           required
-                          :error-messages="errorsNombre"                       
-                        ></v-textarea>
+                          :error-messages="errorsPrecio"                       
+                        ></v-text-field>
                       </v-form>
                     </v-container>
                   </v-card-text>

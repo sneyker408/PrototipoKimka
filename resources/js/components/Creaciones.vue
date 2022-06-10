@@ -6,7 +6,7 @@
       </v-overlay>
       <v-card>
         <v-card-title>
-          Listado de Creaciones de Creaciones
+          Inventario de Creaciones
           <div class="flex-grow-1"></div>
           <v-text-field v-model="search" label="Buscar Creacion" hide-details></v-text-field>
         </v-card-title>
@@ -27,6 +27,10 @@
           <template v-slot:top>
             <v-toolbar flat color="white">
               <div class="flex-grow-1"></div>
+              <v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/creaciones/pdf" target="_blank">
+                     Generar PDF&nbsp;
+                    <v-icon>file-document-box-multiple-outline</v-icon>
+                  </v-btn>
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
                   <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">
@@ -40,53 +44,71 @@
                   </v-card-title>
                   <v-card-text>
                     <v-container>
-                      <v-form ref="formCreacion" v-model="validForm" :lazy-validation="true">
-                       <v-text-field
-                          append-icon="mdi-folder-outline"
-                          v-model="articulo.articulo_id"
-                          label="Articulo"
-                        ></v-text-field>
-                        <v-text-field
-                          append-icon="mdi-egg-easter"
-                          v-model="articulo.Descripcion"
-                          @keyup="errorsProducto = []"
-                          :rules="[v => !!v || 'Producto Es Requerido']"
-                          label="Descripcion"
-                          required
-                          :error-messages="errorsProducto"
-                        ></v-text-field>
-                         <v-text-field
-                          append-icon="mdi-led-strip"
-                          v-model="articulo.color"
-                          label="Color"
-                        ></v-text-field>
-                        <v-text-field
-                          append-icon="mdi-color"
-                          v-model="articulo.color"
-                          label="Cantidad"
-                        ></v-text-field>
-                        <v-row>
+                      <v-form ref="formCreacion" v-model="validForm" :lazy-validation="true">                      
+                      <v-row>
                           <v-col cols="12" md="6">
                             <v-select
-                                v-model="articulo.categoria_id"
+                                v-model="creacion.categoria_id"
                                 :items="arrayCategorias"
                                 label="Seleccione Categoria"
                                 item-value="id"
                                 item-text="nombre"
-                                ></v-select>
+                                @keyup="errorsCategoria = []"
+                                :rules="[v => !!v || 'Categoria Es Requerida']"
+                                required
+                                :error-messages="errorsCategoria"   
+                            ></v-select>
+                          </v-col>
+                          <v-col cols="12" md="6">
+                            <v-select
+                                v-model="creacion.color_id"
+                                :items="arrayColores"
+                                label="Seleccione Color"
+                                item-value="id"
+                                item-text="nombre"
+                                @keyup="errorsColor = []"
+                                :rules="[v => !!v || 'Color Es Requerido']"
+                                required
+                                :error-messages="errorsColor"   
+                            ></v-select>
                           </v-col>
                         </v-row>
-                         <v-textarea                          
+                        <v-text-field
+                          append-icon="mdi-key-outline"
+                          v-model="creacion.codigo"
+                          label="Código"
+                        ></v-text-field> 
+                        <v-text-field     
+                          append-icon="mdi-alpha-d-circle"                   
                           label="Descripción" 
                           no-resize
                           rows="2" 
-                          v-model="articulo.descripcion" 
-                          @keyup="errorsNombre = []"
+                          v-model="creacion.descripcion" 
+                          @keyup="errorsDescripcion = []"
                           :rules="[v => !!v || 'Descripcion Es Requerido']"
                           required
-                          :error-messages="errorsNombre"                       
-                        ></v-textarea>
-                        
+                          :error-messages="errorsDescripcion"                       
+                        ></v-text-field>
+                        <v-text-field
+                          append-icon="mdi-format-list-checks"
+                          v-model="creacion.cantidad"
+                          @keyup="errorsCantidad = []"
+                          :rules="[v => !!v || 'Cantidad Es Requerida']"
+                          label="Cantidad"
+                          required
+                          :error-messages="errorsCantidad"
+                        ></v-text-field>                        
+                         <v-text-field         
+                         append-icon="mdi-sack"                 
+                          label="Precio" 
+                          no-resize
+                          rows="2" 
+                          v-model="creacion.precio" 
+                          @keyup="errorsPrecio = []"
+                          :rules="[v => !!v || 'Precio Es Requerido']"
+                          required
+                          :error-messages="errorsPrecio"                       
+                        ></v-text-field>
                       </v-form>
                     </v-container>
                   </v-card-text>
@@ -158,12 +180,15 @@ export default {
   data() {
      return {
       arrayCreaciones: [],
+      arrayMarcas: [],
+      arrayCategorias: [],
       hTBCreaciones: [
-        { text: "Descripcion", value: "Descripcion" },
-        { text: "Articulo", value: "Articulo" },
-        { text: "Pedidos", value: "Pedidos" },
-        { text: "Cantidad", value: "Cantidad" },
-        { text: "Precio", value: "Precio" },
+        { text: "Código", value: "codigo" },
+        { text: "Categoria", value: "categoria" },
+        { text: "Talla", value: "talla" },
+        { text: "Color", value: "color" },
+        { text: "Descripción", value: "descripcion" },
+        { text: "Precio", value: "precio" },
         { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],
       loader: false,
@@ -171,7 +196,14 @@ export default {
       dialog: false,
       creacion: {
         id: null,
-        nombre: ""
+        codigo: "",
+        nombre: "",
+        descripcion: "",
+        estado: "",
+        marca_id: null,
+        marca: null,
+        categoria_id: null,
+        categoria: null
       },
       validForm: true,
       snackbar: false,
@@ -191,7 +223,6 @@ export default {
     }
   },
   methods: {
-    
     fetchCreaciones() {
       let me = this;
       me.loader = true;
@@ -204,8 +235,34 @@ export default {
           me.loader = false;
           console.log(error);
         });
-      
-     //me.arrayCreaciones = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+     me.loader = false;
+    },
+      fetchCategorias() {
+      let me = this;
+      me.loader = true;
+      axios.get(`/categorias/all`)
+        .then(function(response) {
+          me.arrayCategorias = response.data;
+          me.loader = false;
+        })
+        .catch(function(error) {
+          me.loader = false;
+          console.log(error);
+        });
+     me.loader = false;
+    },
+    fetchMarcas() {
+      let me = this;
+      me.loader = true;
+      axios.get(`/marcas/all`)
+        .then(function(response) {
+          me.arrayMarcas = response.data;
+          me.loader = false;
+        })
+        .catch(function(error) {
+          me.loader = false;
+          console.log(error);
+        });
      me.loader = false;
     },
     
@@ -220,7 +277,11 @@ export default {
       setTimeout(() => {
         me.creacion = {
           id: null,
-          nombre: ""
+          codigo: "",
+          nombre: "",
+          descripcion: "",
+          marca: null,
+          categoria: null
         };
         me.resetValidation();
       }, 300);
@@ -236,41 +297,46 @@ export default {
       me.creacion = Object.assign({}, creacion);
       me.dialog = true;
     },
-    saveCreacion() {
+    
+   saveCreacion() {
       let me = this;
       if (me.$refs.formCreacion.validate()) {
         let accion = me.creacion.id == null ? "add" : "upd";
         me.loader = true;
         if(accion=="add"){
-           axios.post('/creaciones/save', me.creacion)
+            me.creacion.estado = "D";
+            axios.post(`/creaciones/save`,me.creacion)
             .then(function(response) {
-                    me.verificarAccionDato(response.data, response.status, accion);
-                    me.cerrarModal();
-                })
-                .catch(function(error){
-                    if (error.response.status == 409) {
-                        me.setMessageToSnackBar("Creacion ya existe",true);
-                        me.errorsNombre = ["Nombre de categoría existente"];
-                    }
-                    else {
-                        Vue.swal("Error","Ocurrió un error intente de nuevo","error");
-                    }
-                })          
+             // console.log(response.status);
+              if(response.status ==201){
+                 me.verificarAccionDato(response.data, response.status, accion);
+                 me.cerrarModal(); 
+                 console.log(response.status);
+              }else{
+                Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+                me.cerrarModal();
+              }
+            
+            })
+            .catch(function(error){
+               Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+            });
+            me.loader = false;
         }else{
             //para actualizar
-            axios.put('/creaciones/update',me.creacion)
+                axios.put(`/creaciones/update`,me.creacion)
                .then(function(response) {
+                 if(response.status==202){
                     me.verificarAccionDato(response.data, response.status, accion);
-                    me.cerrarModal();
-            })
+                        me.cerrarModal();  
+                 }else{
+                    Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+                     me.cerrarModal();
+                 }
+              })
           .catch(function(error) {
-            if (error.response.status == 409) {
-                me.setMessageToSnackBar("Creacion ya existe",true);
-                me.errorsNombre = ["Nombre de categoría existente"];
-            }
-            else {
-                Vue.swal("Error","Ocurrió un error intente de nuevo","error");
-            }
+            console.log(error);
+            me.loader = false;
           });
         }
       
@@ -293,7 +359,7 @@ export default {
         });
         //personalizando nueva confirmacion
         Vue.swal.fire({
-        title: 'Eliminar Categoría',
+        title: 'Eliminar Creacion',
         text: "Una vez realizada la acción no se podra revertir !",
         type: 'question',
         showCancelButton: true,
@@ -304,10 +370,10 @@ export default {
         }).then((result) => {
         if (result.value) {
             me.loader = true;
-            axios.post('/creaciones/delete', creacion)
+            axios.post(`/creaciones/delete`, creacion)
             .then(function(response) {
-              me.verificarAccionDato(response.data, response.status, "del");
-              me.loader = false;
+                me.verificarAccionDato(response.data, response.status, "del");
+                me.loader = false;
             })
           }
         });
@@ -328,22 +394,22 @@ export default {
         }); 
       switch (accion) {
         case "add":
-          //Agrego al array de creaciones el objecto que devuelve el Backend
-          //me.arrayCreaciones.unshift(creacion);
+          //Agrego al array de horarios el objecto que devuelve el Backend
+          //me.arrayHorarios.unshift(horario);
           this.fetchCreaciones(); 
           Toast.fire({
             icon: 'success',
-            title: 'Categoría Registrada con Exito'
+            title: 'Creacion registrado con Exito'
            });
           me.loader = false;
           break;
         case "upd":
-          //Actualizo al array de creaciones el objecto que devuelve el Backend ya con los datos actualizados
-          //Object.assign(me.arrayCreaciones[me.editedCreacion], creacion);
+          //Actualizo al array de horarios el objecto que devuelve el Backend ya con los datos actualizados
+          //Object.assign(me.arrayHorarios[me.editedHorario], horario);
           this.fetchCreaciones(); 
           Toast.fire({
             icon: 'success',
-            title: 'Categoría Actualizada con Exito'
+            title: 'Creacion Actualizado con Exito'
            }); 
             
           me.loader = false;
@@ -351,12 +417,12 @@ export default {
         case "del":
           if (statusCode == 200) {
             try {
-              //Se elimina del array de Creaciones Activos si todo esta bien en el backend
+              //Se elimina del array de Horarios Activos si todo esta bien en el backend
               me.arrayCreaciones.splice(me.editedCreacion, 1);
               //Se Lanza mensaje Final
               Toast.fire({
                 icon: 'success',
-                title: 'Categoría Eliminada...!!!'
+                title: 'Creacion Eliminado!'
               });
             } catch (error) {
               console.log(error);
@@ -374,6 +440,8 @@ export default {
   mounted() {
     let me = this;
     me.fetchCreaciones();
+    me.fetchCategorias();
+    me.fetchMarcas();
   }
 };
 </script>
