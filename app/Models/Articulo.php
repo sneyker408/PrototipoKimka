@@ -14,8 +14,17 @@ class Articulo extends Model
         return $this->belongsTo(Categoria::class,'categoria_id');
     }
 
-    //Por la relacion inversa con color
-    public function color() {
-        return $this->belongsTo(Color::class,'color_id');
+    //relacion de 1:N con detalle_ventas
+    public function detalle_ventas() {
+        return $this->hasMany(Detalle_venta::class,'id');
     }
+    //relacion de 1:N con creaciones 
+    public function creaciones() {
+        return $this->hasMany(Creacione::class, 'id');
+    }
+    //Por la relacion inversa con detalle_compras
+    public function detalle_compras() {
+        return $this->belongsTo(detalle_compra::class, 'detalle_compras_id');
+    }
+
 }
