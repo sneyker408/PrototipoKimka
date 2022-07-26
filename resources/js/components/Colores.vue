@@ -6,7 +6,7 @@
       </v-overlay>
       <v-card>
         <v-card-title>
-          Listado de Colores de Productos
+          Listado de Colores de Colores
           <div class="flex-grow-1"></div>
           <v-text-field v-model="search" label="Buscar Color" hide-details></v-text-field>
         </v-card-title>
@@ -25,7 +25,7 @@
           <!-- Template Para Modal de Actualizar y Agregar Color -->
 
           <template v-slot:top>
-            <v-toolbar flat color="white">
+            <v-toolbar flat color="green">
               <div class="flex-grow-1"></div>
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
@@ -43,7 +43,7 @@
                       <v-form ref="formColor" v-model="validForm" :lazy-validation="true">
                         <v-text-field
                           append-icon="mdi-folder-outline"
-                          v-model="Color.nombre"
+                          v-model="color.nombre"
                           @keyup="errorsNombre = []"
                           :rules="[v => !!v || 'Nombre Es Requerido']"
                           label="Nombre"
@@ -93,9 +93,9 @@
             <v-tooltip top >
               <template v-slot:activator="{ on }" >
                 <v-btn
-                  color="info"
+                  color="red"
                   class="mx-1"
-                  elevation="8"
+                  elevation="10"
                   small
                   dark
                   :disabled="item.id < 0"
@@ -129,7 +129,7 @@ export default {
       loader: false,
       search: "",
       dialog: false,
-      Color: {
+      color: {
         id: null,
         nombre: ""
       },
@@ -142,12 +142,12 @@ export default {
   },
   computed: {
     formTitle() {
-      return this.Color.id === null
+      return this.color.id === null
         ? "Agregar Color"
         : "Actualizar Color";
     },
     btnTitle() {
-      return this.Color.id === null ? "Guardar" : "Actualizar";
+      return this.color.id === null ? "Guardar" : "Actualizar";
     }
   },
   methods: {
@@ -155,7 +155,8 @@ export default {
     fetchColores() {
       let me = this;
       me.loader = true;
-      axios.get(`/colores/all`)
+      axios
+      .get(`/colores/all`)
         .then(function(response) {
           me.arrayColores = response.data;
           me.loader = false;
@@ -178,7 +179,7 @@ export default {
       let me = this;
       me.dialog = false;
       setTimeout(() => {
-        me.Color = {
+        me.color = {
           id: null,
           nombre: ""
         };
@@ -190,55 +191,50 @@ export default {
       me.errorsNombre = [];
       me.$refs.formColor.resetValidation();
     },
-    showModalEditar(Color) {
+    showModalEditar(color) {
       let me = this;
-      me.editedColor = me.arrayColores.indexOf(Color);
-      me.Color = Object.assign({}, Color);
+      me.editedColor = me.arrayColores.indexOf(color);
+      me.color = Object.assign({}, color);
       me.dialog = true;
     },
     saveColor() {
       let me = this;
       if (me.$refs.formColor.validate()) {
-        let accion = me.Color.id == null ? "add" : "upd";
+        let accion = me.color.id == null ? "add" : "upd";
         me.loader = true;
         if(accion=="add"){
-           axios.post('/colores/save', me.Color)
+            axios.post(`colores/save`,me.color)
             .then(function(response) {
-                    me.verificarAccionDato(response.data, response.status, accion);
-                    me.cerrarModal();
-                })
-                .catch(function(error){
-                    if (error.response.status == 409) {
-                        me.setMessageToSnackBar("Color ya existe",true);
-                        me.errorsNombre = ["Nombre de color existente"];
-                    }
-                    else {
-                        Vue.swal("Error","Ocurrió un error intente de nuevo","error");
-                    }
-                })          
+                 me.verificarAccionDato(response.data, response.status, accion);
+                 me.cerrarModal(); 
+             })
+            .catch(function(error){
+                if(error.response.status == 409){
+                   me.setMessageToSnackBar("El color ya existe",true);
+                   me.errorsNombre = ["Nombre de color existente", "error"];
+                }else{
+                   Vue.swal("Error", "Ocurrio un error intente de nuevo","error"); 
+                }
+            })
         }else{
             //para actualizar
-            axios.put('/colores/update',me.Color)
+                axios.put(`/colores/update`,me.color)
                .then(function(response) {
-                    me.verificarAccionDato(response.data, response.status, accion);
-                    me.cerrarModal();
-            })
+                        me.verificarAccionDato(response.data, response.status, accion);
+                        me.cerrarModal();
+                    
+                })
           .catch(function(error) {
-            if (error.response.status == 409) {
-                me.setMessageToSnackBar("Color ya existe",true);
-                me.errorsNombre = ["Nombre de color existente"];
-            }
-            else {
-                Vue.swal("Error","Ocurrió un error intente de nuevo","error");
-            }
+            console.log(error);
+            me.loader = false;
           });
         }
       
       }
     },
-    deleteColor(Color) {
+    deleteColor(color) {
       let me = this;
-      me.editedColor = me.arrayColores.indexOf(Color);
+      me.editedColor = me.arrayColores.indexOf(color);
       
       const Toast = Vue.swal.mixin({
         toast: true,
@@ -264,15 +260,15 @@ export default {
         }).then((result) => {
         if (result.value) {
             me.loader = true;
-            axios.post('/colores/delete', Color)
+            axios.post(`/colores/delete`, color)
             .then(function(response) {
-              me.verificarAccionDato(response.data, response.status, "del");
-              me.loader = false;
+                me.verificarAccionDato(response.data, response.status, "del");
+                me.loader = false;
             })
           }
         });
     },
-     verificarAccionDato(Color, statusCode, accion) {
+     verificarAccionDato(color, statusCode, accion) {
       let me = this;
       
       const Toast = Vue.swal.mixin({
@@ -288,22 +284,22 @@ export default {
         }); 
       switch (accion) {
         case "add":
-          //Agrego al array de Colores el objecto que devuelve el Backend
-          //me.arrayColores.unshift(Color);
+          //Agrego al array de colores el objecto que devuelve el Backend
+          //me.arrayColores.unshift(color);
           this.fetchColores(); 
           Toast.fire({
             icon: 'success',
-            title: 'Color Registrada con Exito'
+            title: 'Color Registrado con Exito'
            });
           me.loader = false;
           break;
         case "upd":
-          //Actualizo al array de Colores el objecto que devuelve el Backend ya con los datos actualizados
-          //Object.assign(me.arrayColores[me.editedColor], Color);
+          //Actualizo al array de colores el objecto que devuelve el Backend ya con los datos actualizados
+          //Object.assign(me.arrayColores[me.editedColor], color);
           this.fetchColores(); 
           Toast.fire({
             icon: 'success',
-            title: 'Color Actualizada con Exito'
+            title: 'Color Actualizado con Exito'
            }); 
             
           me.loader = false;
@@ -316,7 +312,7 @@ export default {
               //Se Lanza mensaje Final
               Toast.fire({
                 icon: 'success',
-                title: 'Color Eliminada...!!!'
+                title: 'Color Eliminado...!!!'
               });
             } catch (error) {
               console.log(error);
