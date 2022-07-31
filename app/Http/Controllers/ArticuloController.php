@@ -28,6 +28,7 @@ class ArticuloController extends Controller
         try {
             $articulo = new Articulo();
             $articulo->codigo = $request->codigo;
+            $articulo->nombre = $request->nombre;
             $articulo->talla = $request->talla;
             $articulo->descripcion = $request->descripcion;
             $articulo->estado = $request->estado;

@@ -9,11 +9,12 @@ class Cliente extends Model
 {
     use HasFactory;
     //relacion de 1:N con pepdidos
-    public function pedidos() {
+    /*public function pedidos() {
         return $this->hasMany(Pedidos::class, 'id');
     }
     //relacion de 1:N con ventas
     public function ventas() {
         return $this->hasMany(Ventas::class, 'id');
     }
+    */
 }

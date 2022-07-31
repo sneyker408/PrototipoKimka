@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
 
+
 class ProveedorController extends Controller
 {
     /**
@@ -35,51 +36,68 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Proveedor  $proveedor
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Proveedor $proveedor)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Proveedor  $proveedor
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Proveedor $proveedor)
-    {
-        //
+        try {
+            $proveedor = new Proveedor();
+            $proveedor->nombre = $request->nombre;
+            $proveedor->correo = $request->correo;
+            $proveedor->telefono = $request->telefono;
+            $proveedor->save();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Proveedor  $proveedor
+     * @param  int  $id
      * @return \Illuminate\Http\Response
+     * 
+     * Actualizar proveedores
      */
-    public function update(Request $request, Proveedor $proveedor)
+    public function update(Request $request)
     {
-        //
+        try {
+            $proveedor = Proveedor::findORFail($request->id);
+            $proveedor->nombre = $request->nombre;
+            $proveedor->correo = $request->correo;
+            $proveedor->telefono = $request->telefono;
+            $proveedor->save();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Proveedor  $proveedor
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return \Illuminate\Http\
+     * 
+     * Eliminar cateogrias
      */
-    public function destroy(Proveedor $proveedor)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            $proveedor = Proveedor::findORFail($request->id);
+            $proveedor->delete();
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function show()
+    {
+        try {
+            $proveedores = Proveedor::orderBy('id','DESC')->get();
+            return $proveedores;
+        }
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }

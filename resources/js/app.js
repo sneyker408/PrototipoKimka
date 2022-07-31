@@ -6,11 +6,30 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue').default;
-import Vue from 'vue';
 
-import Vuetify from 'vuetify';
-Vue.use(Vuetify)
+
+ 
+window.Vue = require('vue').default;
+ import vue from 'vue';
+ 
+ import Vuetify from 'vuetify'
+ Vue.use(Vuetify);
+ 
+ import VueSweetalert2 from 'vue-sweetalert2';
+ 
+ import 'sweetalert2/dist/sweetalert2.min.css';
+ Vue.use(VueSweetalert2);
+ import Vue from 'vue';
+ 
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
+
+Vue.use(DatePicker);
+
+
+//import 'material-icons/iconfont/material-icons.css';
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

@@ -27,4 +27,8 @@ class Articulo extends Model
         return $this->belongsTo(detalle_compra::class, 'detalle_compras_id');
     }
 
+    public function colores(){
+        return $this->hasMany('App\Models\Color');
+    }
+
 }

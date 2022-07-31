@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Color extends Model
 {
+    protected $table = "colores";
     use HasFactory;
-    //Relacion de 1:N con Creaciones
-    public function creaciones() {
-        //return $this->hasMany('App\Models\creacion');
-        return $this->hasMany(Creacion::class,'id');
+    protected $fillable = ['nombre','articulo_id'];
+
+    public function articulos(){
+        return $this->hasMany('App\Models\Articulos');
     }
+    
 }

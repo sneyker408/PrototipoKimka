@@ -27,10 +27,10 @@
           <template v-slot:top>
             <v-toolbar flat color="white">
               <div class="flex-grow-1"></div>
-              <v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/articulos/pdf" target="_blank">
+              <!--<v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/articulos/pdf" target="_blank">
                      Generar PDF&nbsp;
                     <v-icon>file-document-box-multiple-outline</v-icon>
-                  </v-btn>
+                  </v-btn>-->
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
                   <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">
@@ -175,7 +175,7 @@ export default {
   data() {
      return {
       arrayArticulos: [],
-      arrayMarcas: [],
+      arrayColores: [],
       arrayCategorias: [],
       hTBArticulos: [
         { text: "Código", value: "codigo" },
@@ -195,8 +195,8 @@ export default {
         nombre: "",
         descripcion: "",
         estado: "",
-        marca_id: null,
-        marca: null,
+        color_id: null,
+        color: null,
         categoria_id: null,
         categoria: null
       },
@@ -246,12 +246,12 @@ export default {
         });
      me.loader = false;
     },
-    fetchMarcas() {
+    fetchColores() {
       let me = this;
       me.loader = true;
-      axios.get(`/marcas/all`)
+      axios.get(`/colors/all`)
         .then(function(response) {
-          me.arrayMarcas = response.data;
+          me.arrayColores = response.data;
           me.loader = false;
         })
         .catch(function(error) {
@@ -275,7 +275,7 @@ export default {
           codigo: "",
           nombre: "",
           descripcion: "",
-          marca: null,
+          color: null,
           categoria: null
         };
         me.resetValidation();
@@ -436,7 +436,7 @@ export default {
     let me = this;
     me.fetchArticulos();
     me.fetchCategorias();
-    me.fetchMarcas();
+    me.fetchColores();
   }
 };
 </script>

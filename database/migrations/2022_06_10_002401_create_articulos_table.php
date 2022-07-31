@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('articulos', function (Blueprint $table) {
             $table->id();
             $table->string('codigo',15)->nullable();
+            $table->string('nombre',80)->unique();
             $table->string('estado',1)->default('D');
             $table->foreignId('categoria_id')
             ->nullable()

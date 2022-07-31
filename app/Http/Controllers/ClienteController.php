@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
 use Illuminate\Http\Request;
-
+use App\Models\Cliente;
 
 class ClienteController extends Controller
 {
@@ -48,23 +47,47 @@ class ClienteController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        try{
+            $clientes = Cliente::orderBy('id','DESC')->get();
+            return $clientes;
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     * 
-     * Actualizar clientes
      */
     public function update(Request $request)
     {
-        try {
-            $cliente = Cliente::findORFail($request->id);
+        try{
+            $cliente = Cliente::findOrfail($request->id);
             $cliente->nombre = $request->nombre;
             $cliente->telefono = $request->telefono;
             $cliente->save();
-        }
-        catch(\Exception $e) {
+        }catch(\Exception $e){
             return $e->getMessage();
         }
     }
@@ -73,28 +96,14 @@ class ClienteController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\
-     * 
-     * Eliminar cateogrias
+     * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
     {
-        try {
-            $cliente = Cliente::findORFail($request->id);
+        try{
+            $cliente = Cliente::findOrfail($request->id);
             $cliente->delete();
-        }
-        catch(\Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
-    public function show()
-    {
-        try {
-            $clientes = Cliente::orderBy('id','DESC')->get();
-            return $clientes;
-        }
-        catch(\Exception $e) {
+        }catch(\Exception $e){
             return $e->getMessage();
         }
     }

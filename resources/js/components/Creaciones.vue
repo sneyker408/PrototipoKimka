@@ -27,10 +27,10 @@
           <template v-slot:top>
             <v-toolbar flat color="white">
               <div class="flex-grow-1"></div>
-              <v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/creaciones/pdf" target="_blank">
+              <!-- <v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/creaciones/pdf" target="_blank">
                      Generar PDF&nbsp;
                     <v-icon>file-document-box-multiple-outline</v-icon>
-                  </v-btn>
+                  </v-btn>-->
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
                   <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">
@@ -46,17 +46,31 @@
                     <v-container>
                       <v-form ref="formCreacion" v-model="validForm" :lazy-validation="true">                      
                       <v-row>
+                        <v-col cols="12" md="6">
+                          <v-text-field
+                          append-icon="mdi-checkbox-multiple-marked-circle"
+                          v-model="creacion.codigo"
+                          label="Estado"
+                        ></v-text-field> 
+                        </v-col>
+                        <v-col cols="12" md="6">
+                          <v-text-field
+                          append-icon="mdi-key-outline"
+                          v-model="creacion.codigo"
+                          label="Código"
+                        ></v-text-field> 
+                        </v-col>
                           <v-col cols="12" md="6">
                             <v-select
-                                v-model="creacion.categoria_id"
-                                :items="arrayCategorias"
-                                label="Seleccione Categoria"
+                                v-model="creacion.articulo_id"
+                                :items="arrayArticulos"
+                                label="Seleccione Articulo"
                                 item-value="id"
                                 item-text="nombre"
-                                @keyup="errorsCategoria = []"
-                                :rules="[v => !!v || 'Categoria Es Requerida']"
+                                @keyup="errorsArticulo = []"
+                                :rules="[v => !!v || 'Articulo Es Requerida']"
                                 required
-                                :error-messages="errorsCategoria"   
+                                :error-messages="errorsArticulo"   
                             ></v-select>
                           </v-col>
                           <v-col cols="12" md="6">
@@ -65,19 +79,10 @@
                                 :items="arrayColores"
                                 label="Seleccione Color"
                                 item-value="id"
-                                item-text="nombre"
-                                @keyup="errorsColor = []"
-                                :rules="[v => !!v || 'Color Es Requerido']"
-                                required
-                                :error-messages="errorsColor"   
+                                item-text="nombre"   
                             ></v-select>
                           </v-col>
                         </v-row>
-                        <v-text-field
-                          append-icon="mdi-key-outline"
-                          v-model="creacion.codigo"
-                          label="Código"
-                        ></v-text-field> 
                         <v-text-field     
                           append-icon="mdi-alpha-d-circle"                   
                           label="Descripción" 
@@ -89,6 +94,8 @@
                           required
                           :error-messages="errorsDescripcion"                       
                         ></v-text-field>
+                        <v-row>
+                        <v-col cols="12" md="6">
                         <v-text-field
                           append-icon="mdi-format-list-checks"
                           v-model="creacion.cantidad"
@@ -97,7 +104,9 @@
                           label="Cantidad"
                           required
                           :error-messages="errorsCantidad"
-                        ></v-text-field>                        
+                        ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">                       
                          <v-text-field         
                          append-icon="mdi-sack"                 
                           label="Precio" 
@@ -109,6 +118,8 @@
                           required
                           :error-messages="errorsPrecio"                       
                         ></v-text-field>
+                        </v-col>
+                        </v-row> 
                       </v-form>
                     </v-container>
                   </v-card-text>
@@ -180,14 +191,16 @@ export default {
   data() {
      return {
       arrayCreaciones: [],
-      arrayMarcas: [],
-      arrayCategorias: [],
+      arrayColores: [],
+      arrayArticulos: [],
       hTBCreaciones: [
         { text: "Código", value: "codigo" },
-        { text: "Categoria", value: "categoria" },
+        { text: "Estado", value: "estado" },
+        { text: "Articulo", value: "articulo" },
         { text: "Talla", value: "talla" },
         { text: "Color", value: "color" },
         { text: "Descripción", value: "descripcion" },
+        { text: "Cantidad", value: "cantidad" },
         { text: "Precio", value: "precio" },
         { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],
@@ -197,13 +210,14 @@ export default {
       creacion: {
         id: null,
         codigo: "",
+        estado:"",
         nombre: "",
         descripcion: "",
         estado: "",
-        marca_id: null,
-        marca: null,
-        categoria_id: null,
-        categoria: null
+        color_id: null,
+        color: null,
+        articulo_id: null,
+        articulo: null
       },
       validForm: true,
       snackbar: false,
@@ -237,12 +251,12 @@ export default {
         });
      me.loader = false;
     },
-      fetchCategorias() {
+      fetchArticulos() {
       let me = this;
       me.loader = true;
-      axios.get(`/categorias/all`)
+      axios.get(`/articulos/all`)
         .then(function(response) {
-          me.arrayCategorias = response.data;
+          me.arrayArticulos = response.data;
           me.loader = false;
         })
         .catch(function(error) {
@@ -251,12 +265,12 @@ export default {
         });
      me.loader = false;
     },
-    fetchMarcas() {
+    fetchColores() {
       let me = this;
       me.loader = true;
-      axios.get(`/marcas/all`)
+      axios.get(`/colores/all`)
         .then(function(response) {
-          me.arrayMarcas = response.data;
+          me.arrayColores = response.data;
           me.loader = false;
         })
         .catch(function(error) {
@@ -276,12 +290,14 @@ export default {
       me.dialog = false;
       setTimeout(() => {
         me.creacion = {
-          id: null,
-          codigo: "",
-          nombre: "",
-          descripcion: "",
-          marca: null,
-          categoria: null
+        id: null,
+        codigo: "",
+        estado:"",
+        nombre: "",
+        descripcion: "",
+        estado: "",
+        color: null,
+        articulo: null
         };
         me.resetValidation();
       }, 300);
@@ -440,8 +456,8 @@ export default {
   mounted() {
     let me = this;
     me.fetchCreaciones();
-    me.fetchCategorias();
-    me.fetchMarcas();
+    me.fetchArticulos();
+    me.fetchColores();
   }
 };
 </script>

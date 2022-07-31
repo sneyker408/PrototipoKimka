@@ -23,12 +23,13 @@ return new class extends Migration
             ->constrained('categorias')
             ->cascadeOnUpdate()
             ->nullOnDelete();
-            $table->text('descripcion');
+            $table->string('talla');
             $table->foreignId('color_id')
             ->nullable()
             ->constrained('colores')
             ->cascadeOnUpdate()
             ->nullOnDelete();
+            $table->text('descripcion');
             $table->text('cantidad',);
             
             $table->decimal('precio',5,2);

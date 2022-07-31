@@ -27,10 +27,10 @@
           <template v-slot:top>
             <v-toolbar flat color="white">
               <div class="flex-grow-1"></div>
-              <v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/pedidos/pdf" target="_blank">
+               <!--<v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/pedidos/pdf" target="_blank">
                      Generar PDF&nbsp;
                     <v-icon>file-document-box-multiple-outline</v-icon>
-                  </v-btn>
+                  </v-btn>-->
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
                   <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">

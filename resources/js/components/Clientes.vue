@@ -6,7 +6,7 @@
       </v-overlay>
       <v-card>
         <v-card-title>
-          Inventario de Clientes
+          Registro de Clientes
           <div class="flex-grow-1"></div>
           <v-text-field v-model="search" label="Buscar Cliente" hide-details></v-text-field>
         </v-card-title>
@@ -25,12 +25,8 @@
           <!-- Template Para Modal de Actualizar y Agregar Cliente -->
 
           <template v-slot:top>
-            <v-toolbar flat color="white">
+            <v-toolbar flat color="info">
               <div class="flex-grow-1"></div>
-              <v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/clientes/pdf" target="_blank">
-                     Generar PDF&nbsp;
-                    <v-icon>file-document-box-multiple-outline</v-icon>
-                  </v-btn>
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
                   <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">
@@ -45,14 +41,8 @@
                   <v-card-text>
                     <v-container>
                       <v-form ref="formCliente" v-model="validForm" :lazy-validation="true">
-                        <v-text-field
-                          append-icon="mdi-folder-outline"
-                          v-model="cliente.codigo"
-                          label="Código"
-
-                        ></v-text-field>
                          <v-text-field
-                          append-icon="laptop"
+                          prepend-icon="mdi-account"
                           v-model="cliente.nombre"
                           @keyup="errorsNombre = []"
                           :rules="[v => !!v || 'Nombre Es Requerido']"
@@ -60,37 +50,15 @@
                           required
                           :error-messages="errorsNombre"
                         ></v-text-field>
-                         <v-textarea                          
-                          label="Descripción" 
-                          no-resize
-                          rows="2" 
-                          v-model="cliente.descripcion" 
-                          @keyup="errorsNombre = []"
-                          :rules="[v => !!v || 'Descripcion Es Requerido']"
-                          required
-                          :error-messages="errorsNombre"                       
-                        ></v-textarea>
                         <v-row>
                           <v-col cols="12" md="6">
-                            <v-select
-                                v-model="cliente.marca_id"
-                                :items="arrayMarcas"
-                                label="Seleccione Marca"
-                                item-value="id"
-                                item-text="nombre"
-                                ></v-select>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <v-select
-                                v-model="cliente.categoria_id"
-                                :items="arrayCategorias"
-                                label="Seleccione Categoria"
-                                item-value="id"
-                                item-text="nombre"
-                                ></v-select>
-                          </v-col>
+                         <v-text-field    
+                          v-model="cliente.telefono"
+                          prepend-icon="mdi-cellphone-basic"                     
+                          label="telefono"                                                 
+                        ></v-text-field>
+                        </v-col>
                         </v-row>
-                      
                       </v-form>
                     </v-container>
                   </v-card-text>
@@ -117,7 +85,7 @@
             <v-tooltip top>
               <template v-slot:activator="{ on }">
                 <v-btn
-                  color="success"
+                  color="#0dcaf0"
                   elevation="8"
                   small
                   dark
@@ -133,7 +101,7 @@
             <v-tooltip top >
               <template v-slot:activator="{ on }" >
                 <v-btn
-                  color="info"
+                  color="red"
                   class="mx-1"
                   elevation="8"
                   small
@@ -162,26 +130,18 @@ export default {
   data() {
      return {
       arrayClientes: [],
-      arrayMarcas: [],
-      arrayCategorias: [],
       hTBClientes: [
-        { text: "Código", value: "codigo" },
         { text: "Nombre", value: "nombre" },
-        { text: "Telefono", value: "talla" },
+        { text: "Telefono", value: "telefono" },
+        { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],
       loader: false,
       search: "",
       dialog: false,
       cliente: {
         id: null,
-        codigo: "",
         nombre: "",
-        descripcion: "",
-        estado: "",
-        marca_id: null,
-        marca: null,
-        categoria_id: null,
-        categoria: null
+        telefono:""
       },
       validForm: true,
       snackbar: false,
@@ -215,34 +175,6 @@ export default {
         });
      me.loader = false;
     },
-      fetchCategorias() {
-      let me = this;
-      me.loader = true;
-      axios.get(`/categorias/all`)
-        .then(function(response) {
-          me.arrayCategorias = response.data;
-          me.loader = false;
-        })
-        .catch(function(error) {
-          me.loader = false;
-          console.log(error);
-        });
-     me.loader = false;
-    },
-    fetchMarcas() {
-      let me = this;
-      me.loader = true;
-      axios.get(`/marcas/all`)
-        .then(function(response) {
-          me.arrayMarcas = response.data;
-          me.loader = false;
-        })
-        .catch(function(error) {
-          me.loader = false;
-          console.log(error);
-        });
-     me.loader = false;
-    },
     
     setMessageToSnackBar(msj, estado) {
       let me = this;
@@ -255,11 +187,8 @@ export default {
       setTimeout(() => {
         me.cliente = {
           id: null,
-          codigo: "",
-          nombre: "",
-          descripcion: "",
-          marca: null,
-          categoria: null
+          nombre:"",
+          telefono:""
         };
         me.resetValidation();
       }, 300);
@@ -276,42 +205,33 @@ export default {
       me.dialog = true;
     },
     
-   saveCliente() {
+    saveCliente() {
       let me = this;
       if (me.$refs.formCliente.validate()) {
         let accion = me.cliente.id == null ? "add" : "upd";
         me.loader = true;
         if(accion=="add"){
-            me.cliente.estado = "D";
-            axios.post(`/clientes/save`,me.cliente)
+            axios.post(`clientes/save`,me.cliente)
             .then(function(response) {
-             // console.log(response.status);
-              if(response.status ==201){
                  me.verificarAccionDato(response.data, response.status, accion);
                  me.cerrarModal(); 
-                 console.log(response.status);
-              }else{
-                Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-                me.cerrarModal();
-              }
-            
-            })
+             })
             .catch(function(error){
-               Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-            });
-            me.loader = false;
+                if(error.response.status == 409){
+                   me.setMessageToSnackBar("El cliente  ya existe",true);
+                   me.errorsNombre = ["Nombre de cliente ya existente", "error"];
+                }else{
+                   Vue.swal("Error", "Ocurrio un error intente de nuevo","error"); 
+                }
+            })
         }else{
             //para actualizar
                 axios.put(`/clientes/update`,me.cliente)
                .then(function(response) {
-                 if(response.status==202){
-                    me.verificarAccionDato(response.data, response.status, accion);
-                        me.cerrarModal();  
-                 }else{
-                    Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-                     me.cerrarModal();
-                 }
-              })
+                        me.verificarAccionDato(response.data, response.status, accion);
+                        me.cerrarModal();
+                    
+                })
           .catch(function(error) {
             console.log(error);
             me.loader = false;
@@ -341,8 +261,8 @@ export default {
         text: "Una vez realizada la acción no se podra revertir !",
         type: 'question',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonCliente: '#3085d6',
+        cancelButtonCliente: '#d33',
         confirmButtonText: 'Si',
         cancelButtonText: "No"
         }).then((result) => {
@@ -418,8 +338,6 @@ export default {
   mounted() {
     let me = this;
     me.fetchClientes();
-    me.fetchCategorias();
-    me.fetchMarcas();
   }
 };
 </script>

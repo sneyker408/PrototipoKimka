@@ -6,9 +6,9 @@
       </v-overlay>
       <v-card>
         <v-card-title>
-          Inventario de Proveedores
+          Registro de Proveedores
           <div class="flex-grow-1"></div>
-          <v-text-field v-model="search" label="Buscar Proveedor" append-icon="mdi-database-search" hide-details></v-text-field>
+          <v-text-field v-model="search" label="Buscar Proveedor" hide-details></v-text-field>
         </v-card-title>
         <v-data-table
           :headers="hTBProveedores"
@@ -27,10 +27,6 @@
           <template v-slot:top>
             <v-toolbar flat color="white">
               <div class="flex-grow-1"></div>
-              <v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/proveedores/pdf" target="_blank">
-                     Generar PDF&nbsp;
-                    <v-icon>file-document-box-multiple-outline</v-icon>
-                  </v-btn>
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
                   <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">
@@ -46,8 +42,8 @@
                     <v-container>
                       <v-form ref="formProveedor" v-model="validForm" :lazy-validation="true">
                          <v-text-field
-                          append-icon="mdi-account"
-                          v-model="cliente.nombre"
+                          prepend-icon="mdi-account"
+                          v-model="proveedor.nombre"
                           @keyup="errorsNombre = []"
                           :rules="[v => !!v || 'Nombre Es Requerido']"
                           label="Nombre"
@@ -55,45 +51,25 @@
                           :error-messages="errorsNombre"
                         ></v-text-field>
                         <v-text-field
-                          append-icon="mdi-mail-ru"
-                          v-model="cliente.correo"
-                          @keyup="errorsNombre = []"
+                          prepend-icon="mdi-account"
+                          v-model="proveedor.correo"
+                          @keyup="errorsCorreo = []"
                           :rules="[v => !!v || 'Correo Es Requerido']"
-                          label="Correo"
+                          label="Correo electronico"
                           required
-                          :error-messages="errorsCorreo"
-                        ></v-text-field>
-                         <v-text-field
-                          append-icon="mdi-account-box"
-                          v-model="cliente.telefono"
-                          @keyup="errorstelfono = []"
-                          :rules="[v => !!v || 'Telefono Es Requerido']"
-                          label="Telefono"
-                          required
-                          :error-messages="errorsTelefono"
+                          :error-messages="errorsNombre"
                         ></v-text-field>
                         <v-row>
                           <v-col cols="12" md="6">
-                            <v-select
-                                  append-icon=" mdi-menu-down"
-                                v-model="cliente.color_id"
-                                :items="arrayColores"
-                                label="Seleccione Color "
-                                item-value="id"
-                                item-text="nombre"
-                                ></v-select>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <v-select
-                                v-model="cliente.categoria_id"
-                                :items="arrayCategorias"
-                                label="Seleccione Categoria"
-                                item-value="id"
-                                item-text="nombre"
-                                ></v-select>
-                          </v-col>
+                         <v-text-field    
+                          v-model="proveedor.telefono"
+                          prepend-icon="mdi-cellphone-basic"
+                          @keyup="errorsCorreo = []"
+                          :rules="[v => !!v || 'El Numero Es Requerido']"                     
+                          label="telefono"                                                 
+                        ></v-text-field>
+                        </v-col>
                         </v-row>
-                      
                       </v-form>
                     </v-container>
                   </v-card-text>
@@ -165,27 +141,20 @@ export default {
   data() {
      return {
       arrayProveedores: [],
-      arrayMarcas: [],
-      arrayCategorias: [],
       hTBProveedores: [
-        { text: "Código", value: "codigo" },
         { text: "Nombre", value: "nombre" },
         { text: "Correo electronico", value: "correo" },
-        { text: "Telefono", value: "telefono" },
+        { text: "Teléfono", value: "telefono" },
+        { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],
       loader: false,
       search: "",
       dialog: false,
-      cliente: {
+      proveedor: {
         id: null,
-        codigo: "",
         nombre: "",
-        descripcion: "",
-        estado: "",
-        marca_id: null,
-        marca: null,
-        categoria_id: null,
-        categoria: null
+        correo:"",
+        telefono:""
       },
       validForm: true,
       snackbar: false,
@@ -196,12 +165,12 @@ export default {
   },
   computed: {
     formTitle() {
-      return this.cliente.id === null
+      return this.proveedor.id === null
         ? "Agregar Proveedor"
         : "Actualizar Proveedor";
     },
     btnTitle() {
-      return this.cliente.id === null ? "Guardar" : "Actualizar";
+      return this.proveedor.id === null ? "Guardar" : "Actualizar";
     }
   },
   methods: {
@@ -211,34 +180,6 @@ export default {
       axios.get(`/proveedores/all`)
         .then(function(response) {
           me.arrayProveedores = response.data;
-          me.loader = false;
-        })
-        .catch(function(error) {
-          me.loader = false;
-          console.log(error);
-        });
-     me.loader = false;
-    },
-      fetchCategorias() {
-      let me = this;
-      me.loader = true;
-      axios.get(`/categorias/all`)
-        .then(function(response) {
-          me.arrayCategorias = response.data;
-          me.loader = false;
-        })
-        .catch(function(error) {
-          me.loader = false;
-          console.log(error);
-        });
-     me.loader = false;
-    },
-    fetchMarcas() {
-      let me = this;
-      me.loader = true;
-      axios.get(`/marcas/all`)
-        .then(function(response) {
-          me.arrayMarcas = response.data;
           me.loader = false;
         })
         .catch(function(error) {
@@ -257,13 +198,11 @@ export default {
       let me = this;
       me.dialog = false;
       setTimeout(() => {
-        me.cliente = {
+        me.proveedor = {
           id: null,
-          codigo: "",
           nombre: "",
-          descripcion: "",
-          marca: null,
-          categoria: null
+          correo: "",
+          Telefono:""
         };
         me.resetValidation();
       }, 300);
@@ -273,49 +212,40 @@ export default {
       me.errorsNombre = [];
       me.$refs.formProveedor.resetValidation();
     },
-    showModalEditar(cliente) {
+    showModalEditar(proveedor) {
       let me = this;
-      me.editedProveedor = me.arrayProveedores.indexOf(cliente);
-      me.cliente = Object.assign({}, cliente);
+      me.editedProveedor = me.arrayProveedores.indexOf(proveedor);
+      me.proveedor = Object.assign({}, proveedor);
       me.dialog = true;
     },
     
-   saveProveedor() {
+  saveProveedor() {
       let me = this;
       if (me.$refs.formProveedor.validate()) {
-        let accion = me.cliente.id == null ? "add" : "upd";
+        let accion = me.proveedor.id == null ? "add" : "upd";
         me.loader = true;
         if(accion=="add"){
-            me.cliente.estado = "D";
-            axios.post(`/proveedores/save`,me.cliente)
+            axios.post(`proveedores/save`,me.proveedor)
             .then(function(response) {
-             // console.log(response.status);
-              if(response.status ==201){
                  me.verificarAccionDato(response.data, response.status, accion);
                  me.cerrarModal(); 
-                 console.log(response.status);
-              }else{
-                Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-                me.cerrarModal();
-              }
-            
-            })
+             })
             .catch(function(error){
-               Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-            });
-            me.loader = false;
+                if(error.response.status == 409){
+                   me.setMessageToSnackBar("El proveedor  ya existe",true);
+                   me.errorsNombre = ["Nombre de proveedor ya existente", "error"];
+                }else{
+                   Vue.swal("Error", "Ocurrio un error intente de nuevo","error"); 
+                }
+            })
         }else{
             //para actualizar
-                axios.put(`/proveedores/update`,me.cliente)
+                axios.put(`/proveedores/update`,me.proveedor)
                .then(function(response) {
-                 if(response.status==202){
-                    me.verificarAccionDato(response.data, response.status, accion);
-                        me.cerrarModal();  
-                 }else{
-                    Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-                     me.cerrarModal();
-                 }
-              })
+                        me.verificarAccionDato(response.data, response.status, accion);
+                        me.cerrarModal();
+                    
+                })
           .catch(function(error) {
             console.log(error);
             me.loader = false;
@@ -324,9 +254,9 @@ export default {
       
       }
     },
-    deleteProveedor(cliente) {
+    deleteProveedor(proveedor) {
       let me = this;
-      me.editedProveedor = me.arrayProveedores.indexOf(cliente);
+      me.editedProveedor = me.arrayProveedores.indexOf(proveedor);
       
       const Toast = Vue.swal.mixin({
         toast: true,
@@ -360,7 +290,7 @@ export default {
           }
         });
     },
-     verificarAccionDato(cliente, statusCode, accion) {
+     verificarAccionDato(proveedor, statusCode, accion) {
       let me = this;
       
       const Toast = Vue.swal.mixin({
@@ -422,8 +352,6 @@ export default {
   mounted() {
     let me = this;
     me.fetchProveedores();
-    me.fetchCategorias();
-    me.fetchMarcas();
   }
 };
 </script>

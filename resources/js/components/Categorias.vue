@@ -77,7 +77,7 @@
             <v-tooltip top>
               <template v-slot:activator="{ on }">
                 <v-btn
-                  color="success"
+                  color="success darken-1"
                   elevation="8"
                   small
                   dark
