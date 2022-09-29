@@ -16,16 +16,18 @@ return new class extends Migration
         Schema::create('articulos', function (Blueprint $table) {
             $table->id();
             $table->string('codigo',15)->nullable();
-            $table->string('nombre',80)->unique();
-            $table->string('estado',1)->default('D');
-            $table->foreignId('categoria_id')
-            ->nullable()
-            ->constrained('categorias')
-            ->cascadeOnUpdate()
-            ->nullOnDelete();
-            $table->string('talla',50);
+            $table->string('nombre',100);
             $table->text('descripcion');
-            $table->text('existencia');
+            $table->string('tipo',100);
+            $table->decimal('precio');
+            $table->string('existencia');
+            $table->string('estado',1)->default('D');
+            $table->integer('categoria_id')->unsigned();
+            //definiendo la columna anterior como llave foranea con la tabla categorias
+            $table->foreign('categoria_id')->references('id')->on('categorias');
+            $table->integer('color_id')->unsigned();
+            //definiendo la columna anterior como llave foranea con la tabla colores
+            $table->foreign('color_id')->references('id')->on('colores');
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
   <div class="content">
     <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
       <v-overlay :value="loader" :z-index="'99999999'">
-        <v-progress-circular indeterminate size="80" color="grey darken-4"></v-progress-circular>
+        <v-progress-circular indeterminate size="90" color="black darken-4"></v-progress-circular>
       </v-overlay>
       <v-card>
         <v-card-title>
@@ -25,7 +25,7 @@
           <!-- Template Para Modal de Actualizar y Agregar Categoria -->
 
           <template v-slot:top>
-            <v-toolbar flat color="white">
+            <v-toolbar flat color="blue">
               <div class="flex-grow-1"></div>
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
@@ -93,7 +93,7 @@
             <v-tooltip top >
               <template v-slot:activator="{ on }" >
                 <v-btn
-                  color="info"
+                  color="red"
                   class="mx-1"
                   elevation="8"
                   small
@@ -111,7 +111,7 @@
         </v-data-table>
         <v-snackbar v-model="snackbar">
           {{ msjSnackBar }}
-          <v-btn color="red" text @click="snackbar = false">Cerrar</v-btn>
+          <v-btn color="#d33" text @click="snackbar = false">Cerrar</v-btn>
         </v-snackbar>
       </v-card>
     </div>

@@ -25,7 +25,7 @@
           <!-- Template Para Modal de Actualizar y Agregar Color -->
 
           <template v-slot:top>
-            <v-toolbar flat color="green">
+            <v-toolbar flat color="blue">
               <div class="flex-grow-1"></div>
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
@@ -123,7 +123,7 @@ export default {
      return {
       arrayColores: [],
       hTBColores: [
-        { text: "Nombre", value: "nombre" },
+        { text: "Nombre", value: "nombre", },
         { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],
       loader: false,
@@ -275,7 +275,7 @@ export default {
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 2000,
         timerProgressBar: true,
         onOpen: (toast) => {
             toast.addEventListener('mouseenter', Swal.stopTimer)

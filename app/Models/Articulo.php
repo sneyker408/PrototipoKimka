@@ -9,26 +9,20 @@ class Articulo extends Model
 {
     use HasFactory;
 
-    //Por la relacion inversa con categoria
-    public function categoria() {
-        return $this->belongsTo(Categoria::class,'categoria_id');
+   
+    protected $fillable = ['codigo','nombre','descripcion','tipo','precio','existencia','estado','categoria_id','color_id'];
+
+
+    public function categorias(){
+        return $this->hasMany('App\Models\Categoria');
     }
 
-    //relacion de 1:N con detalle_ventas
-    public function detalle_ventas() {
-        return $this->hasMany(Detalle_venta::class,'id');
-    }
-    //relacion de 1:N con creaciones 
-    public function creaciones() {
-        return $this->hasMany(Creacione::class, 'id');
-    }
-    //Por la relacion inversa con detalle_compras
-    public function detalle_compras() {
-        return $this->belongsTo(detalle_compra::class, 'detalle_compras_id');
-    }
-
-    public function colores(){
+    public function marcas(){
         return $this->hasMany('App\Models\Color');
+    }
+
+    public function imagenes(){
+        return $this->hasMany('App\Models\Imagen');
     }
 
 }

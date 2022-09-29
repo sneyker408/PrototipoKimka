@@ -15,7 +15,7 @@
   </div>
 </div>   
 
-<div class="card" style="width: 18rem; float:right;">
+<div class="card" style="width: 18rem;">
   <img src="https://blog.comparasoftware.com/wp-content/uploads/2021/02/tipos-de-clientes-de-ecommerce-1.png" class="card-img-top" alt="...">
   <div class="card-body">
     <p class="card-text">Clientes</p>
@@ -36,7 +36,7 @@
     <a href="colores" class="btn btn-primary stretched-link">Vamos</a>
   </div>
 </div> 
-<div class="card" style="width: 18rem; float:right;">
+<div class="card" style="width: 18rem;">
   <img src="https://i.ytimg.com/vi/iwWNW4JWnFw/maxresdefault.jpg" class="card-img-top" alt="...">
   <div class="card-body">
     <p class="card-text">Creaciones</p>
@@ -50,7 +50,7 @@
     <a href="ventas" class="btn btn-primary stretched-link">Vamos</a>
   </div>
 </div> 
-<div class="card" style="width: 18rem; float:right;">
+<div class="card" style="width: 18rem;">
   <img src="https://escuelainenka.com/wp-content/uploads/proveedores.jpg" class="card-img-top" alt="...">
   <div class="card-body">
     <p class="card-text">Proveedores</p>

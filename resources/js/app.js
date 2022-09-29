@@ -27,7 +27,7 @@ import 'vue2-datepicker/index.css';
 Vue.use(DatePicker);
 
 
-//import 'material-icons/iconfont/material-icons.css';
+import 'material-icons/iconfont/material-icons.css';
 
 
 /**

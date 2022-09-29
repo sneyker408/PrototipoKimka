@@ -7,13 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pedido extends Model
 {
-    use HasFactory;
-    //Por la relacion inversa con clientes
-    public function clientes() {
-        return $this->belongsTo(Cliente::class, 'clientes_id');
+    protected $fillable = ['codigo','nombre','descripcion','fecha_pedido','fecha_entrega','estado','cliente_id','user_id'];
+
+
+    public function categorias(){
+        return $this->hasMany('App\Models\Cliente');
     }
-    //relacion de 1:N con creaciones
-    public function creaciones() {
-        return $this->hasMany(Creacion::class, 'creaciones_i');
+
+    public function marcas(){
+        return $this->hasMany('App\Models\User');
     }
+
 }

@@ -5540,6 +5540,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5547,23 +5565,32 @@ __webpack_require__.r(__webpack_exports__);
       arrayColores: [],
       arrayCategorias: [],
       hTBArticulos: [{
-        text: "Código",
+        text: "Codigo",
         value: "codigo"
       }, {
-        text: "Categoria",
-        value: "categoria"
+        text: "Nombre",
+        value: "nombre"
       }, {
-        text: "Talla",
-        value: "talla"
+        text: "Descripcion",
+        value: "descripcion"
+      }, {
+        text: "Tipo",
+        value: "tipo"
+      }, {
+        text: "Precio",
+        value: "precio" || 0
+      }, {
+        text: "Estado",
+        value: "estado"
+      }, {
+        text: "Existencia",
+        value: "existencia"
+      }, {
+        text: "Categoría",
+        value: "categoria"
       }, {
         text: "Color",
         value: "color"
-      }, {
-        text: "Descripción",
-        value: "descripcion"
-      }, {
-        text: "Precio",
-        value: "precio"
       }, {
         text: "Acciones",
         value: "action",
@@ -5578,11 +5605,14 @@ __webpack_require__.r(__webpack_exports__);
         codigo: "",
         nombre: "",
         descripcion: "",
+        tipo: "",
+        precio: "",
+        existencia: "",
         estado: "",
-        color_id: null,
-        color: null,
         categoria_id: null,
-        categoria: null
+        categoria: null,
+        color_id: null,
+        color: null
       },
       validForm: true,
       snackbar: false,
@@ -5609,7 +5639,8 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         me.loader = false;
         console.log(error);
-      });
+      }); //me.arrayCategorias = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+
       me.loader = false;
     },
     fetchCategorias: function fetchCategorias() {
@@ -5621,19 +5652,21 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         me.loader = false;
         console.log(error);
-      });
+      }); //me.arrayCategorias = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+
       me.loader = false;
     },
     fetchColores: function fetchColores() {
       var me = this;
       me.loader = true;
-      axios.get("/colors/all").then(function (response) {
+      axios.get("/colores/all").then(function (response) {
         me.arrayColores = response.data;
         me.loader = false;
       })["catch"](function (error) {
         me.loader = false;
         console.log(error);
-      });
+      }); //me.arrayCategorias = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+
       me.loader = false;
     },
     setMessageToSnackBar: function setMessageToSnackBar(msj, estado) {
@@ -5650,8 +5683,14 @@ __webpack_require__.r(__webpack_exports__);
           codigo: "",
           nombre: "",
           descripcion: "",
-          color: null,
-          categoria: null
+          tipo: "",
+          precio: "",
+          existencia: "",
+          estado: "",
+          categoria_id: null,
+          categoria: null,
+          color_id: null,
+          color: null
         };
         me.resetValidation();
       }, 300);
@@ -5662,6 +5701,7 @@ __webpack_require__.r(__webpack_exports__);
       me.$refs.formArticulo.resetValidation();
     },
     showModalEditar: function showModalEditar(articulo) {
+      console.log(articulo);
       var me = this;
       me.editedArticulo = me.arrayArticulos.indexOf(articulo);
       me.articulo = Object.assign({}, articulo);
@@ -5676,34 +5716,27 @@ __webpack_require__.r(__webpack_exports__);
 
         if (accion == "add") {
           me.articulo.estado = "D";
-          axios.post("/articulos/save", me.articulo).then(function (response) {
-            // console.log(response.status);
+          axios.post('articulos/save', me.articulo).then(function (response) {
+            // console.log(response.statusText);
             if (response.status == 201) {
               me.verificarAccionDato(response.data, response.status, accion);
               me.cerrarModal();
-              console.log(response.status);
-            } else {
-              Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-              me.cerrarModal();
             }
           })["catch"](function (error) {
-            Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+            Vue.swal("Error", "Ocurrio Un Error Intente Nuevamente", "error");
           });
           me.loader = false;
         } else {
           //para actualizar
-          axios.put("/articulos/update", me.articulo).then(function (response) {
+          axios.put("articulos/update", me.articulo).then(function (response) {
             if (response.status == 202) {
               me.verificarAccionDato(response.data, response.status, accion);
               me.cerrarModal();
-            } else {
-              Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-              me.cerrarModal();
             }
           })["catch"](function (error) {
-            console.log(error);
-            me.loader = false;
+            Vue.swal("Error", "Ocurrio Un Error Intente Nuevamente", "error");
           });
+          me.loader = false;
         }
       }
     },
@@ -5722,6 +5755,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       }); //personalizando nueva confirmacion
 
+      console.log(articulo);
       Vue.swal.fire({
         title: 'Eliminar Articulo',
         text: "Una vez realizada la acción no se podra revertir !",
@@ -5734,8 +5768,10 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           me.loader = true;
-          axios.post("/articulos/delete", articulo).then(function (response) {
-            me.verificarAccionDato(response.data, response.status, "del");
+          console.log(articulo);
+          axios.post("articulos/delete", articulo).then(function (response) {
+            console.log(response.data);
+            me.verificarAccionDato(response.data.data, response.status, "del");
             me.loader = false;
           });
         }
@@ -5757,19 +5793,19 @@ __webpack_require__.r(__webpack_exports__);
 
       switch (accion) {
         case "add":
-          //Agrego al array de horarios el objecto que devuelve el Backend
-          //me.arrayHorarios.unshift(horario);
+          //Agrego al array de categorias el objecto que devuelve el Backend
+          //me.arrayCategorias.unshift(categoria);
           this.fetchArticulos();
           Toast.fire({
             icon: 'success',
-            title: 'Articulo registrado con Exito'
+            title: 'Articulo Registrado con Exito'
           });
           me.loader = false;
           break;
 
         case "upd":
-          //Actualizo al array de horarios el objecto que devuelve el Backend ya con los datos actualizados
-          //Object.assign(me.arrayHorarios[me.editedHorario], horario);
+          //Actualizo al array de categorias el objecto que devuelve el Backend ya con los datos actualizados
+          //Object.assign(me.arrayCategorias[me.editedCategoria], categoria);
           this.fetchArticulos();
           Toast.fire({
             icon: 'success',
@@ -5781,12 +5817,12 @@ __webpack_require__.r(__webpack_exports__);
         case "del":
           if (statusCode == 200) {
             try {
-              //Se elimina del array de Horarios Activos si todo esta bien en el backend
+              //Se elimina del array de Categorias Activos si todo esta bien en el backend
               me.arrayArticulos.splice(me.editedArticulo, 1); //Se Lanza mensaje Final
 
               Toast.fire({
                 icon: 'success',
-                title: 'Articulo Eliminado!'
+                title: 'Articulo Eliminado...!!!'
               });
             } catch (error) {
               console.log(error);
@@ -6785,7 +6821,7 @@ __webpack_require__.r(__webpack_exports__);
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 2000,
         timerProgressBar: true,
         onOpen: function onOpen(toast) {
           toast.addEventListener('mouseenter', Swal.stopTimer);
@@ -7354,6 +7390,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     var _creacion;
@@ -7363,11 +7405,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       arrayColores: [],
       arrayArticulos: [],
       hTBCreaciones: [{
-        text: "Código",
-        value: "codigo"
+        text: "Nombre",
+        value: "nombre"
       }, {
-        text: "Estado",
-        value: "estado"
+        text: "Material",
+        value: "es"
       }, {
         text: "Articulo",
         value: "articulo"
@@ -7836,27 +7878,118 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       arrayPedidos: [],
-      arrayMarcas: [],
-      arrayCategorias: [],
+      arrayUsers: [],
+      arrayClientes: [],
       hTBPedidos: [{
-        text: "Fecha",
-        value: "codigo"
+        text: "Nombre",
+        value: "nombre"
+      }, {
+        text: "Descripcion",
+        value: "descripcion"
       }, {
         text: "Estado",
-        value: "categoria"
+        value: "estado"
       }, {
-        text: "Cliente",
-        value: "talla"
+        text: "Fecha Pedido",
+        value: "fecha_pedido"
       }, {
         text: "Fecha entrega",
-        value: "color"
+        value: "fecha_entrega"
       }, {
-        text: "Usuario",
-        value: "descripcion"
+        text: "Cliente",
+        value: "cliente"
+      }, {
+        text: "User",
+        value: "user"
       }, {
         text: "Acciones",
         value: "action",
@@ -7868,14 +8001,15 @@ __webpack_require__.r(__webpack_exports__);
       dialog: false,
       pedido: {
         id: null,
-        codigo: "",
         nombre: "",
         descripcion: "",
         estado: "",
-        marca_id: null,
-        marca: null,
-        categoria_id: null,
-        categoria: null
+        fecha_pedido: "",
+        fecha_entrega: "",
+        cliente_id: null,
+        cliente: null,
+        user_id: null,
+        user: null
       },
       validForm: true,
       snackbar: false,
@@ -7902,31 +8036,34 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         me.loader = false;
         console.log(error);
-      });
+      }); //me.arrayClientes = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+
       me.loader = false;
     },
-    fetchCategorias: function fetchCategorias() {
+    fetchClientes: function fetchClientes() {
       var me = this;
       me.loader = true;
-      axios.get("/categorias/all").then(function (response) {
-        me.arrayCategorias = response.data;
+      axios.get("/clientes/all").then(function (response) {
+        me.arrayClientes = response.data;
         me.loader = false;
       })["catch"](function (error) {
         me.loader = false;
         console.log(error);
-      });
+      }); //me.arrayClientes = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+
       me.loader = false;
     },
-    fetchMarcas: function fetchMarcas() {
+    fetchUsers: function fetchUsers() {
       var me = this;
       me.loader = true;
-      axios.get("/marcas/all").then(function (response) {
-        me.arrayMarcas = response.data;
+      axios.get("/users/all").then(function (response) {
+        me.arrayUsers = response.data;
         me.loader = false;
       })["catch"](function (error) {
         me.loader = false;
         console.log(error);
-      });
+      }); //me.arrayClientes = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+
       me.loader = false;
     },
     setMessageToSnackBar: function setMessageToSnackBar(msj, estado) {
@@ -7940,11 +8077,15 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         me.pedido = {
           id: null,
-          codigo: "",
           nombre: "",
           descripcion: "",
-          marca: null,
-          categoria: null
+          estado: "",
+          fecha_pedido: "",
+          fecha_entrega: "",
+          cliente_id: null,
+          cliente: null,
+          user_id: null,
+          user: null
         };
         me.resetValidation();
       }, 300);
@@ -7955,6 +8096,7 @@ __webpack_require__.r(__webpack_exports__);
       me.$refs.formPedido.resetValidation();
     },
     showModalEditar: function showModalEditar(pedido) {
+      console.log(pedido);
       var me = this;
       me.editedPedido = me.arrayPedidos.indexOf(pedido);
       me.pedido = Object.assign({}, pedido);
@@ -7969,34 +8111,27 @@ __webpack_require__.r(__webpack_exports__);
 
         if (accion == "add") {
           me.pedido.estado = "D";
-          axios.post("/pedidos/save", me.pedido).then(function (response) {
-            // console.log(response.status);
+          axios.post('pedidos/save', me.pedido).then(function (response) {
+            // console.log(response.statusText);
             if (response.status == 201) {
               me.verificarAccionDato(response.data, response.status, accion);
               me.cerrarModal();
-              console.log(response.status);
-            } else {
-              Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-              me.cerrarModal();
             }
           })["catch"](function (error) {
-            Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+            Vue.swal("Error", "Ocurrio Un Error Intente Nuevamente", "error");
           });
           me.loader = false;
         } else {
           //para actualizar
-          axios.put("/pedidos/update", me.pedido).then(function (response) {
+          axios.put("pedidos/update", me.pedido).then(function (response) {
             if (response.status == 202) {
               me.verificarAccionDato(response.data, response.status, accion);
               me.cerrarModal();
-            } else {
-              Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-              me.cerrarModal();
             }
           })["catch"](function (error) {
-            console.log(error);
-            me.loader = false;
+            Vue.swal("Error", "Ocurrio Un Error Intente Nuevamente", "error");
           });
+          me.loader = false;
         }
       }
     },
@@ -8015,6 +8150,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       }); //personalizando nueva confirmacion
 
+      console.log(pedido);
       Vue.swal.fire({
         title: 'Eliminar Pedido',
         text: "Una vez realizada la acción no se podra revertir !",
@@ -8027,8 +8163,10 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           me.loader = true;
-          axios.post("/pedidos/delete", pedido).then(function (response) {
-            me.verificarAccionDato(response.data, response.status, "del");
+          console.log(pedido);
+          axios.post("pedidos/delete", pedido).then(function (response) {
+            console.log(response.data);
+            me.verificarAccionDato(response.data.data, response.status, "del");
             me.loader = false;
           });
         }
@@ -8050,19 +8188,19 @@ __webpack_require__.r(__webpack_exports__);
 
       switch (accion) {
         case "add":
-          //Agrego al array de horarios el objecto que devuelve el Backend
-          //me.arrayHorarios.unshift(horario);
+          //Agrego al array de clientes el objecto que devuelve el Backend
+          //me.arrayClientes.unshift(cliente);
           this.fetchPedidos();
           Toast.fire({
             icon: 'success',
-            title: 'Pedido registrado con Exito'
+            title: 'Pedido Registrado con Exito'
           });
           me.loader = false;
           break;
 
         case "upd":
-          //Actualizo al array de horarios el objecto que devuelve el Backend ya con los datos actualizados
-          //Object.assign(me.arrayHorarios[me.editedHorario], horario);
+          //Actualizo al array de clientes el objecto que devuelve el Backend ya con los datos actualizados
+          //Object.assign(me.arrayClientes[me.editedCliente], cliente);
           this.fetchPedidos();
           Toast.fire({
             icon: 'success',
@@ -8074,12 +8212,12 @@ __webpack_require__.r(__webpack_exports__);
         case "del":
           if (statusCode == 200) {
             try {
-              //Se elimina del array de Horarios Activos si todo esta bien en el backend
+              //Se elimina del array de Clientes Activos si todo esta bien en el backend
               me.arrayPedidos.splice(me.editedPedido, 1); //Se Lanza mensaje Final
 
               Toast.fire({
                 icon: 'success',
-                title: 'Pedido Eliminado!'
+                title: 'Pedido Eliminado...!!!'
               });
             } catch (error) {
               console.log(error);
@@ -8098,8 +8236,8 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var me = this;
     me.fetchPedidos();
-    me.fetchCategorias();
-    me.fetchMarcas();
+    me.fetchClientes();
+    me.fetchUsers();
   }
 });
 
@@ -8923,6 +9061,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/index.esm.js");
 /* harmony import */ var vue2_datepicker_index_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue2-datepicker/index.css */ "./node_modules/vue2-datepicker/index.css");
+/* harmony import */ var material_icons_iconfont_material_icons_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! material-icons/iconfont/material-icons.css */ "./node_modules/material-icons/iconfont/material-icons.css");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -8940,7 +9079,7 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use((vue_sweetalert2__WEBPACK_IMPORT
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue2_datepicker__WEBPACK_IMPORTED_MODULE_4__["default"]); //import 'material-icons/iconfont/material-icons.css';
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue2_datepicker__WEBPACK_IMPORTED_MODULE_4__["default"]);
 
 /**
  * The following block of code may be used to automatically register your
@@ -14038,6 +14177,63 @@ defineJQueryPlugin(Toast);
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/material-icons/iconfont/material-icons.css":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/material-icons/iconfont/material-icons.css ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../css-loader/dist/runtime/getUrl.js */ "./node_modules/css-loader/dist/runtime/getUrl.js");
+/* harmony import */ var _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _material_icons_woff2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./material-icons.woff2 */ "./node_modules/material-icons/iconfont/material-icons.woff2");
+/* harmony import */ var _material_icons_woff__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./material-icons.woff */ "./node_modules/material-icons/iconfont/material-icons.woff");
+/* harmony import */ var _material_icons_outlined_woff2__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./material-icons-outlined.woff2 */ "./node_modules/material-icons/iconfont/material-icons-outlined.woff2");
+/* harmony import */ var _material_icons_outlined_woff__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./material-icons-outlined.woff */ "./node_modules/material-icons/iconfont/material-icons-outlined.woff");
+/* harmony import */ var _material_icons_round_woff2__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./material-icons-round.woff2 */ "./node_modules/material-icons/iconfont/material-icons-round.woff2");
+/* harmony import */ var _material_icons_round_woff__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./material-icons-round.woff */ "./node_modules/material-icons/iconfont/material-icons-round.woff");
+/* harmony import */ var _material_icons_sharp_woff2__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./material-icons-sharp.woff2 */ "./node_modules/material-icons/iconfont/material-icons-sharp.woff2");
+/* harmony import */ var _material_icons_sharp_woff__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./material-icons-sharp.woff */ "./node_modules/material-icons/iconfont/material-icons-sharp.woff");
+/* harmony import */ var _material_icons_two_tone_woff2__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./material-icons-two-tone.woff2 */ "./node_modules/material-icons/iconfont/material-icons-two-tone.woff2");
+/* harmony import */ var _material_icons_two_tone_woff__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./material-icons-two-tone.woff */ "./node_modules/material-icons/iconfont/material-icons-two-tone.woff");
+// Imports
+
+
+
+
+
+
+
+
+
+
+
+
+var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+var ___CSS_LOADER_URL_REPLACEMENT_0___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_woff2__WEBPACK_IMPORTED_MODULE_2__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_1___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_woff__WEBPACK_IMPORTED_MODULE_3__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_2___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_outlined_woff2__WEBPACK_IMPORTED_MODULE_4__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_3___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_outlined_woff__WEBPACK_IMPORTED_MODULE_5__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_4___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_round_woff2__WEBPACK_IMPORTED_MODULE_6__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_5___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_round_woff__WEBPACK_IMPORTED_MODULE_7__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_6___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_sharp_woff2__WEBPACK_IMPORTED_MODULE_8__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_7___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_sharp_woff__WEBPACK_IMPORTED_MODULE_9__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_8___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_two_tone_woff2__WEBPACK_IMPORTED_MODULE_10__["default"]);
+var ___CSS_LOADER_URL_REPLACEMENT_9___ = _css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_material_icons_two_tone_woff__WEBPACK_IMPORTED_MODULE_11__["default"]);
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"Material Icons\";\n  font-style: normal;\n  font-weight: 400;\n  font-display: block;\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"woff2\"), url(" + ___CSS_LOADER_URL_REPLACEMENT_1___ + ") format(\"woff\");\n}\n.material-icons {\n  font-family: \"Material Icons\";\n  font-weight: normal;\n  font-style: normal;\n  font-size: 24px;\n  line-height: 1;\n  letter-spacing: normal;\n  text-transform: none;\n  display: inline-block;\n  white-space: nowrap;\n  word-wrap: normal;\n  direction: ltr;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-rendering: optimizeLegibility;\n  font-feature-settings: \"liga\";\n}\n\n@font-face {\n  font-family: \"Material Icons Outlined\";\n  font-style: normal;\n  font-weight: 400;\n  font-display: block;\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_2___ + ") format(\"woff2\"), url(" + ___CSS_LOADER_URL_REPLACEMENT_3___ + ") format(\"woff\");\n}\n.material-icons-outlined {\n  font-family: \"Material Icons Outlined\";\n  font-weight: normal;\n  font-style: normal;\n  font-size: 24px;\n  line-height: 1;\n  letter-spacing: normal;\n  text-transform: none;\n  display: inline-block;\n  white-space: nowrap;\n  word-wrap: normal;\n  direction: ltr;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-rendering: optimizeLegibility;\n  font-feature-settings: \"liga\";\n}\n\n@font-face {\n  font-family: \"Material Icons Round\";\n  font-style: normal;\n  font-weight: 400;\n  font-display: block;\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_4___ + ") format(\"woff2\"), url(" + ___CSS_LOADER_URL_REPLACEMENT_5___ + ") format(\"woff\");\n}\n.material-icons-round {\n  font-family: \"Material Icons Round\";\n  font-weight: normal;\n  font-style: normal;\n  font-size: 24px;\n  line-height: 1;\n  letter-spacing: normal;\n  text-transform: none;\n  display: inline-block;\n  white-space: nowrap;\n  word-wrap: normal;\n  direction: ltr;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-rendering: optimizeLegibility;\n  font-feature-settings: \"liga\";\n}\n\n@font-face {\n  font-family: \"Material Icons Sharp\";\n  font-style: normal;\n  font-weight: 400;\n  font-display: block;\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_6___ + ") format(\"woff2\"), url(" + ___CSS_LOADER_URL_REPLACEMENT_7___ + ") format(\"woff\");\n}\n.material-icons-sharp {\n  font-family: \"Material Icons Sharp\";\n  font-weight: normal;\n  font-style: normal;\n  font-size: 24px;\n  line-height: 1;\n  letter-spacing: normal;\n  text-transform: none;\n  display: inline-block;\n  white-space: nowrap;\n  word-wrap: normal;\n  direction: ltr;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-rendering: optimizeLegibility;\n  font-feature-settings: \"liga\";\n}\n\n@font-face {\n  font-family: \"Material Icons Two Tone\";\n  font-style: normal;\n  font-weight: 400;\n  font-display: block;\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_8___ + ") format(\"woff2\"), url(" + ___CSS_LOADER_URL_REPLACEMENT_9___ + ") format(\"woff\");\n}\n.material-icons-two-tone {\n  font-family: \"Material Icons Two Tone\";\n  font-weight: normal;\n  font-style: normal;\n  font-size: 24px;\n  line-height: 1;\n  letter-spacing: normal;\n  text-transform: none;\n  display: inline-block;\n  white-space: nowrap;\n  word-wrap: normal;\n  direction: ltr;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-rendering: optimizeLegibility;\n  font-feature-settings: \"liga\";\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/sweetalert2/dist/sweetalert2.min.css":
 /*!*******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/sweetalert2/dist/sweetalert2.min.css ***!
@@ -14158,6 +14354,50 @@ module.exports = function (cssWithMappingToString) {
   };
 
   return list;
+};
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/runtime/getUrl.js":
+/*!********************************************************!*\
+  !*** ./node_modules/css-loader/dist/runtime/getUrl.js ***!
+  \********************************************************/
+/***/ ((module) => {
+
+"use strict";
+
+
+module.exports = function (url, options) {
+  if (!options) {
+    // eslint-disable-next-line no-param-reassign
+    options = {};
+  } // eslint-disable-next-line no-underscore-dangle, no-param-reassign
+
+
+  url = url && url.__esModule ? url.default : url;
+
+  if (typeof url !== "string") {
+    return url;
+  } // If url is already wrapped in quotes, remove them
+
+
+  if (/^['"].*['"]$/.test(url)) {
+    // eslint-disable-next-line no-param-reassign
+    url = url.slice(1, -1);
+  }
+
+  if (options.hash) {
+    // eslint-disable-next-line no-param-reassign
+    url += options.hash;
+  } // Should url be wrapped?
+  // See https://drafts.csswg.org/css-values-3/#urls
+
+
+  if (/["'() \t\n]/.test(url) || options.needQuotes) {
+    return "\"".concat(url.replace(/"/g, '\\"').replace(/\n/g, "\\n"), "\"");
+  }
+
+  return url;
 };
 
 /***/ }),
@@ -14885,6 +15125,156 @@ function getWeek(value) {
   var diff = firstDateOfThisWeek.getTime() - firstDateOfFirstWeek.getTime();
   return Math.round(diff / (7 * 24 * 3600 * 1000)) + 1;
 }
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons-outlined.woff":
+/*!***************************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons-outlined.woff ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons-outlined.woff?f882956fd323fd322f31c0665e000772");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons-outlined.woff2":
+/*!****************************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons-outlined.woff2 ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons-outlined.woff2?6f420cf17cc0d7676fadeee43b45bd50");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons-round.woff":
+/*!************************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons-round.woff ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons-round.woff?5d681e2edae8c60630db51d7fbc2907b");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons-round.woff2":
+/*!*************************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons-round.woff2 ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons-round.woff2?c380809fd3677d7d690354355dc7e66e");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons-sharp.woff":
+/*!************************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons-sharp.woff ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons-sharp.woff?3a4004a46a653d4b2166dd7273dd24bb");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons-sharp.woff2":
+/*!*************************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons-sharp.woff2 ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons-sharp.woff2?219aa9140e099e6c72ed886f739033e0");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons-two-tone.woff":
+/*!***************************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons-two-tone.woff ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons-two-tone.woff?3baa5b8f3469222b822d0c748fc81ec7");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons-two-tone.woff2":
+/*!****************************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons-two-tone.woff2 ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons-two-tone.woff2?4ef4218c522f1eb6b5b1d8b7df0385ce");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons.woff":
+/*!******************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons.woff ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons.woff?deddd42fbb54fa44344069c9ce2ebdcc");
+
+/***/ }),
+
+/***/ "./node_modules/material-icons/iconfont/material-icons.woff2":
+/*!*******************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons.woff2 ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/fonts/vendor/material-icons/iconmaterial-icons.woff2?acf7f51653310d9142e6a1bba563b18d");
 
 /***/ }),
 
@@ -32307,6 +32697,36 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/material-icons/iconfont/material-icons.css":
+/*!*****************************************************************!*\
+  !*** ./node_modules/material-icons/iconfont/material-icons.css ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_material_icons_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./material-icons.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/material-icons/iconfont/material-icons.css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_material_icons_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_material_icons_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/sweetalert2/dist/sweetalert2.min.css":
 /*!***********************************************************!*\
   !*** ./node_modules/sweetalert2/dist/sweetalert2.min.css ***!
@@ -33550,49 +33970,26 @@ var render = function () {
                                                       },
                                                     },
                                                     [
-                                                      _c("v-select", {
+                                                      _c("v-text-field", {
                                                         attrs: {
-                                                          items:
-                                                            _vm.arrayCategorias,
-                                                          label:
-                                                            "Seleccione Categoria",
-                                                          "item-value": "id",
-                                                          "item-text": "nombre",
-                                                          rules: [
-                                                            function (v) {
-                                                              return (
-                                                                !!v ||
-                                                                "Categoria Es Requerida"
-                                                              )
-                                                            },
-                                                          ],
-                                                          required: "",
-                                                          "error-messages":
-                                                            _vm.errorsCategoria,
-                                                        },
-                                                        on: {
-                                                          keyup: function (
-                                                            $event
-                                                          ) {
-                                                            _vm.errorsCategoria =
-                                                              []
-                                                          },
+                                                          "append-icon":
+                                                            "mdi-folder-outline",
+                                                          label: "Codigo",
                                                         },
                                                         model: {
                                                           value:
-                                                            _vm.articulo
-                                                              .categoria_id,
+                                                            _vm.articulo.codigo,
                                                           callback: function (
                                                             $$v
                                                           ) {
                                                             _vm.$set(
                                                               _vm.articulo,
-                                                              "categoria_id",
+                                                              "codigo",
                                                               $$v
                                                             )
                                                           },
                                                           expression:
-                                                            "articulo.categoria_id",
+                                                            "articulo.codigo",
                                                         },
                                                       }),
                                                     ],
@@ -33608,12 +34005,245 @@ var render = function () {
                                                       },
                                                     },
                                                     [
+                                                      _c("v-text-field", {
+                                                        attrs: {
+                                                          "append-icon":
+                                                            "mdi-folder-outline",
+                                                          rules: [
+                                                            function (v) {
+                                                              return (
+                                                                !!v ||
+                                                                "Nombre Es Requerido"
+                                                              )
+                                                            },
+                                                          ],
+                                                          label: "Nombre",
+                                                          required: "",
+                                                          "error-messages":
+                                                            _vm.errorsNombre,
+                                                        },
+                                                        on: {
+                                                          keyup: function (
+                                                            $event
+                                                          ) {
+                                                            _vm.errorsNombre =
+                                                              []
+                                                          },
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.articulo.nombre,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.articulo,
+                                                              "nombre",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "articulo.nombre",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-row",
+                                                [
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
+                                                    },
+                                                    [
+                                                      _c("v-textarea", {
+                                                        attrs: {
+                                                          label: "Description",
+                                                          "no-resize": "",
+                                                          rows: "1",
+                                                          rules: [
+                                                            function (v) {
+                                                              return (
+                                                                !!v ||
+                                                                "Descripcion Es Requerido"
+                                                              )
+                                                            },
+                                                          ],
+                                                          required: "",
+                                                          "error-messages":
+                                                            _vm.errorsNombre,
+                                                        },
+                                                        on: {
+                                                          keyup: function (
+                                                            $event
+                                                          ) {
+                                                            _vm.errorsDescripcion =
+                                                              []
+                                                          },
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.articulo
+                                                              .descripcion,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.articulo,
+                                                              "descripcion",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "articulo.descripcion",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
+                                                    },
+                                                    [
+                                                      _c("v-text-field", {
+                                                        attrs: {
+                                                          "append-icon":
+                                                            "mdi-folder-outline",
+                                                          label: "Existencia",
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.articulo
+                                                              .existencia,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.articulo,
+                                                              "existencia",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "articulo.existencia",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-row",
+                                                [
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
+                                                    },
+                                                    [
+                                                      _c("v-text-field", {
+                                                        attrs: {
+                                                          "append-icon":
+                                                            "mdi-folder-outline",
+                                                          label: "Tipo",
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.articulo.tipo,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.articulo,
+                                                              "tipo",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "articulo.tipo",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
+                                                    },
+                                                    [
+                                                      _c("v-text-field", {
+                                                        attrs: {
+                                                          "append-icon":
+                                                            "mdi-folder-outline",
+                                                          label: "Precio",
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.articulo.precio,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.articulo,
+                                                              "precio",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "articulo.precio",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-row",
+                                                [
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
+                                                    },
+                                                    [
                                                       _c("v-select", {
                                                         attrs: {
                                                           items:
                                                             _vm.arrayColores,
                                                           label:
-                                                            "Seleccione Color",
+                                                            "seleccione una color",
                                                           "item-value": "id",
                                                           "item-text": "nombre",
                                                         },
@@ -33637,142 +34267,48 @@ var render = function () {
                                                     ],
                                                     1
                                                   ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
+                                                    },
+                                                    [
+                                                      _c("v-select", {
+                                                        attrs: {
+                                                          items:
+                                                            _vm.arrayCategorias,
+                                                          label:
+                                                            "seleccione una Categoria",
+                                                          "item-value": "id",
+                                                          "item-text": "nombre",
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.articulo
+                                                              .categoria_id,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.articulo,
+                                                              "categoria_id",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "articulo.categoria_id",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
                                                 ],
                                                 1
                                               ),
-                                              _vm._v(" "),
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  "append-icon":
-                                                    "mdi-key-outline",
-                                                  label: "Código",
-                                                },
-                                                model: {
-                                                  value: _vm.articulo.codigo,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.articulo,
-                                                      "codigo",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "articulo.codigo",
-                                                },
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  "append-icon":
-                                                    "mdi-ruler-square",
-                                                  label: "Talla",
-                                                },
-                                                model: {
-                                                  value: _vm.articulo.talla,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.articulo,
-                                                      "talla",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "articulo.talla",
-                                                },
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  "append-icon":
-                                                    "mdi-alpha-d-circle",
-                                                  label: "descripción",
-                                                },
-                                                model: {
-                                                  value:
-                                                    _vm.articulo.descripcion,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.articulo,
-                                                      "descripcion",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression:
-                                                    "articulo.descripcion",
-                                                },
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  "append-icon":
-                                                    "mdi-notebook-multiple",
-                                                  rules: [
-                                                    function (v) {
-                                                      return (
-                                                        !!v ||
-                                                        "La Existencia Es Requerida"
-                                                      )
-                                                    },
-                                                  ],
-                                                  label: "Existencia",
-                                                  required: "",
-                                                  "error-messages":
-                                                    _vm.errorsProducto,
-                                                },
-                                                on: {
-                                                  keyup: function ($event) {
-                                                    _vm.errorsExistencia = []
-                                                  },
-                                                },
-                                                model: {
-                                                  value:
-                                                    _vm.articulo.existencia,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.articulo,
-                                                      "existencia",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression:
-                                                    "articulo.existencia",
-                                                },
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  "append-icon":
-                                                    "mdi-currency-usd",
-                                                  label: "Precio",
-                                                  "no-resize": "",
-                                                  rows: "2",
-                                                  rules: [
-                                                    function (v) {
-                                                      return (
-                                                        !!v ||
-                                                        "Precio Es Requerido"
-                                                      )
-                                                    },
-                                                  ],
-                                                  required: "",
-                                                  "error-messages":
-                                                    _vm.errorsPrecio,
-                                                },
-                                                on: {
-                                                  keyup: function ($event) {
-                                                    _vm.errorsPrecio = []
-                                                  },
-                                                },
-                                                model: {
-                                                  value: _vm.articulo.precio,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.articulo,
-                                                      "precio",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "articulo.precio",
-                                                },
-                                              }),
                                             ],
                                             1
                                           ),
@@ -34004,7 +34540,7 @@ var render = function () {
           { attrs: { value: _vm.loader, "z-index": "99999999" } },
           [
             _c("v-progress-circular", {
-              attrs: { indeterminate: "", size: "80", color: "grey darken-4" },
+              attrs: { indeterminate: "", size: "90", color: "black darken-4" },
             }),
           ],
           1
@@ -34055,7 +34591,7 @@ var render = function () {
                     return [
                       _c(
                         "v-toolbar",
-                        { attrs: { flat: "", color: "white" } },
+                        { attrs: { flat: "", color: "blue" } },
                         [
                           _c("div", { staticClass: "flex-grow-1" }),
                           _vm._v(" "),
@@ -34310,7 +34846,7 @@ var render = function () {
                                         {
                                           staticClass: "mx-1",
                                           attrs: {
-                                            color: "info",
+                                            color: "red",
                                             elevation: "8",
                                             small: "",
                                             dark: "",
@@ -34359,7 +34895,7 @@ var render = function () {
                 _c(
                   "v-btn",
                   {
-                    attrs: { color: "red", text: "" },
+                    attrs: { color: "#d33", text: "" },
                     on: {
                       click: function ($event) {
                         _vm.snackbar = false
@@ -34913,7 +35449,7 @@ var render = function () {
                     return [
                       _c(
                         "v-toolbar",
-                        { attrs: { flat: "", color: "green" } },
+                        { attrs: { flat: "", color: "blue" } },
                         [
                           _c("div", { staticClass: "flex-grow-1" }),
                           _vm._v(" "),
@@ -35802,22 +36338,22 @@ var render = function () {
                                                         attrs: {
                                                           "append-icon":
                                                             "mdi-checkbox-multiple-marked-circle",
-                                                          label: "Estado",
+                                                          label: "Nombre",
                                                         },
                                                         model: {
                                                           value:
-                                                            _vm.creacion.codigo,
+                                                            _vm.creacion.nombre,
                                                           callback: function (
                                                             $$v
                                                           ) {
                                                             _vm.$set(
                                                               _vm.creacion,
-                                                              "codigo",
+                                                              "nombre",
                                                               $$v
                                                             )
                                                           },
                                                           expression:
-                                                            "creacion.codigo",
+                                                            "creacion.nombre",
                                                         },
                                                       }),
                                                     ],
@@ -35833,26 +36369,49 @@ var render = function () {
                                                       },
                                                     },
                                                     [
-                                                      _c("v-text-field", {
+                                                      _c("v-select", {
                                                         attrs: {
-                                                          "append-icon":
-                                                            "mdi-key-outline",
-                                                          label: "Código",
+                                                          items:
+                                                            _vm.arrayArticulos,
+                                                          label:
+                                                            "Seleccione Material",
+                                                          "item-value": "id",
+                                                          "item-text": "nombre",
+                                                          rules: [
+                                                            function (v) {
+                                                              return (
+                                                                !!v ||
+                                                                "Material Es Requerida"
+                                                              )
+                                                            },
+                                                          ],
+                                                          required: "",
+                                                          "error-messages":
+                                                            _vm.errorsMaterial,
+                                                        },
+                                                        on: {
+                                                          keyup: function (
+                                                            $event
+                                                          ) {
+                                                            _vm.errorsArticulo =
+                                                              []
+                                                          },
                                                         },
                                                         model: {
                                                           value:
-                                                            _vm.creacion.codigo,
+                                                            _vm.creacion
+                                                              .material_id,
                                                           callback: function (
                                                             $$v
                                                           ) {
                                                             _vm.$set(
                                                               _vm.creacion,
-                                                              "codigo",
+                                                              "material_id",
                                                               $$v
                                                             )
                                                           },
                                                           expression:
-                                                            "creacion.codigo",
+                                                            "creacion.material_id",
                                                         },
                                                       }),
                                                     ],
@@ -36536,94 +37095,484 @@ var render = function () {
                                               },
                                             },
                                             [
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  "append-icon":
-                                                    "mdi-folder-outline",
-                                                  label: "Código",
-                                                },
-                                                model: {
-                                                  value: _vm.pedido.codigo,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.pedido,
-                                                      "codigo",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "pedido.codigo",
-                                                },
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  "append-icon": "laptop",
-                                                  rules: [
-                                                    function (v) {
-                                                      return (
-                                                        !!v ||
-                                                        "Nombre Es Requerido"
-                                                      )
+                                              _c(
+                                                "v-row",
+                                                [
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
                                                     },
-                                                  ],
-                                                  label: "Nombre",
-                                                  required: "",
-                                                  "error-messages":
-                                                    _vm.errorsNombre,
-                                                },
-                                                on: {
-                                                  keyup: function ($event) {
-                                                    _vm.errorsNombre = []
-                                                  },
-                                                },
-                                                model: {
-                                                  value: _vm.pedido.nombre,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.pedido,
-                                                      "nombre",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "pedido.nombre",
-                                                },
-                                              }),
-                                              _vm._v(" "),
-                                              _c("v-textarea", {
-                                                attrs: {
-                                                  label: "Descripción",
-                                                  "no-resize": "",
-                                                  rows: "2",
-                                                  rules: [
-                                                    function (v) {
-                                                      return (
-                                                        !!v ||
-                                                        "Descripcion Es Requerido"
-                                                      )
+                                                    [
+                                                      _c("v-text-field", {
+                                                        attrs: {
+                                                          "append-icon":
+                                                            "mdi-folder-outline",
+                                                          rules: [
+                                                            function (v) {
+                                                              return (
+                                                                !!v ||
+                                                                "Nombre Es Requerido"
+                                                              )
+                                                            },
+                                                          ],
+                                                          label: "Nombre",
+                                                          required: "",
+                                                          "error-messages":
+                                                            _vm.errorsNombre,
+                                                        },
+                                                        on: {
+                                                          keyup: function (
+                                                            $event
+                                                          ) {
+                                                            _vm.errorsNombre =
+                                                              []
+                                                          },
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.pedido.nombre,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.pedido,
+                                                              "nombre",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "pedido.nombre",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
                                                     },
-                                                  ],
-                                                  required: "",
-                                                  "error-messages":
-                                                    _vm.errorsNombre,
-                                                },
-                                                on: {
-                                                  keyup: function ($event) {
-                                                    _vm.errorsNombre = []
-                                                  },
-                                                },
-                                                model: {
-                                                  value: _vm.pedido.descripcion,
-                                                  callback: function ($$v) {
-                                                    _vm.$set(
-                                                      _vm.pedido,
-                                                      "descripcion",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression:
-                                                    "pedido.descripcion",
-                                                },
-                                              }),
+                                                    [
+                                                      _c("v-textarea", {
+                                                        attrs: {
+                                                          label: "Descripcion",
+                                                          "no-resize": "",
+                                                          rows: "1",
+                                                          rules: [
+                                                            function (v) {
+                                                              return (
+                                                                !!v ||
+                                                                "Descripcion Es Requerido"
+                                                              )
+                                                            },
+                                                          ],
+                                                          required: "",
+                                                          "error-messages":
+                                                            _vm.errorsNombre,
+                                                        },
+                                                        on: {
+                                                          keyup: function (
+                                                            $event
+                                                          ) {
+                                                            _vm.errorsDescripcion =
+                                                              []
+                                                          },
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.pedido
+                                                              .descripcion,
+                                                          callback: function (
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.pedido,
+                                                              "descripcion",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "pedido.descripcion",
+                                                        },
+                                                      }),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-row",
+                                                [
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        md: "6",
+                                                      },
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "v-menu",
+                                                        {
+                                                          ref: "menu",
+                                                          attrs: {
+                                                            "close-on-content-click": false,
+                                                            "return-value":
+                                                              _vm.date,
+                                                            transition:
+                                                              "scale-transition",
+                                                            "offset-y": "",
+                                                            "min-width": "auto",
+                                                          },
+                                                          on: {
+                                                            "update:returnValue":
+                                                              function (
+                                                                $event
+                                                              ) {
+                                                                _vm.date =
+                                                                  $event
+                                                              },
+                                                            "update:return-value":
+                                                              function (
+                                                                $event
+                                                              ) {
+                                                                _vm.date =
+                                                                  $event
+                                                              },
+                                                          },
+                                                          scopedSlots: _vm._u([
+                                                            {
+                                                              key: "activator",
+                                                              fn: function (
+                                                                ref
+                                                              ) {
+                                                                var on = ref.on
+                                                                var attrs =
+                                                                  ref.attrs
+                                                                return [
+                                                                  _c(
+                                                                    "v-text-field",
+                                                                    _vm._g(
+                                                                      _vm._b(
+                                                                        {
+                                                                          attrs:
+                                                                            {
+                                                                              label:
+                                                                                "Fecha de pedido",
+                                                                              "prepend-icon":
+                                                                                "mdi-calendar",
+                                                                              readonly:
+                                                                                "",
+                                                                            },
+                                                                          model:
+                                                                            {
+                                                                              value:
+                                                                                _vm.date,
+                                                                              callback:
+                                                                                function (
+                                                                                  $$v
+                                                                                ) {
+                                                                                  _vm.date =
+                                                                                    $$v
+                                                                                },
+                                                                              expression:
+                                                                                "date",
+                                                                            },
+                                                                        },
+                                                                        "v-text-field",
+                                                                        attrs,
+                                                                        false
+                                                                      ),
+                                                                      on
+                                                                    )
+                                                                  ),
+                                                                ]
+                                                              },
+                                                            },
+                                                          ]),
+                                                          model: {
+                                                            value: _vm.menu,
+                                                            callback: function (
+                                                              $$v
+                                                            ) {
+                                                              _vm.menu = $$v
+                                                            },
+                                                            expression: "menu",
+                                                          },
+                                                        },
+                                                        [
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "v-date-picker",
+                                                            {
+                                                              attrs: {
+                                                                "no-title": "",
+                                                                scrollable: "",
+                                                              },
+                                                              model: {
+                                                                value: _vm.date,
+                                                                callback:
+                                                                  function (
+                                                                    $$v
+                                                                  ) {
+                                                                    _vm.date =
+                                                                      $$v
+                                                                  },
+                                                                expression:
+                                                                  "date",
+                                                              },
+                                                            },
+                                                            [
+                                                              _c("v-spacer"),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "v-btn",
+                                                                {
+                                                                  attrs: {
+                                                                    text: "",
+                                                                    color:
+                                                                      "red",
+                                                                  },
+                                                                  on: {
+                                                                    click:
+                                                                      function (
+                                                                        $event
+                                                                      ) {
+                                                                        _vm.menu = false
+                                                                      },
+                                                                  },
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    "\n                                      Cancel\n                                    "
+                                                                  ),
+                                                                ]
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "v-btn",
+                                                                {
+                                                                  attrs: {
+                                                                    text: "",
+                                                                    color:
+                                                                      "primary",
+                                                                  },
+                                                                  on: {
+                                                                    click:
+                                                                      function (
+                                                                        $event
+                                                                      ) {
+                                                                        return _vm.$refs.menu.save(
+                                                                          _vm.date
+                                                                        )
+                                                                      },
+                                                                  },
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    "\n                                      OK\n                                    "
+                                                                  ),
+                                                                ]
+                                                              ),
+                                                            ],
+                                                            1
+                                                          ),
+                                                        ],
+                                                        1
+                                                      ),
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    [
+                                                      _c(
+                                                        "v-menu",
+                                                        {
+                                                          ref: "menu",
+                                                          attrs: {
+                                                            "close-on-content-click": false,
+                                                            "return-value":
+                                                              _vm.date,
+                                                            transition:
+                                                              "scale-transition",
+                                                            "offset-y": "",
+                                                            "min-width": "auto",
+                                                          },
+                                                          on: {
+                                                            "update:returnValue":
+                                                              function (
+                                                                $event
+                                                              ) {
+                                                                _vm.date =
+                                                                  $event
+                                                              },
+                                                            "update:return-value":
+                                                              function (
+                                                                $event
+                                                              ) {
+                                                                _vm.date =
+                                                                  $event
+                                                              },
+                                                          },
+                                                          scopedSlots: _vm._u([
+                                                            {
+                                                              key: "activator",
+                                                              fn: function (
+                                                                ref
+                                                              ) {
+                                                                var on = ref.on
+                                                                var attrs =
+                                                                  ref.attrs
+                                                                return [
+                                                                  _c(
+                                                                    "v-text-field",
+                                                                    _vm._g(
+                                                                      _vm._b(
+                                                                        {
+                                                                          attrs:
+                                                                            {
+                                                                              label:
+                                                                                "Fecha de entrega",
+                                                                              "prepend-icon":
+                                                                                "mdi-calendar",
+                                                                              readonly:
+                                                                                "",
+                                                                            },
+                                                                          model:
+                                                                            {
+                                                                              value:
+                                                                                _vm.date,
+                                                                              callback:
+                                                                                function (
+                                                                                  $$v
+                                                                                ) {
+                                                                                  _vm.date =
+                                                                                    $$v
+                                                                                },
+                                                                              expression:
+                                                                                "date",
+                                                                            },
+                                                                        },
+                                                                        "v-text-field",
+                                                                        attrs,
+                                                                        false
+                                                                      ),
+                                                                      on
+                                                                    )
+                                                                  ),
+                                                                ]
+                                                              },
+                                                            },
+                                                          ]),
+                                                          model: {
+                                                            value: _vm.menu,
+                                                            callback: function (
+                                                              $$v
+                                                            ) {
+                                                              _vm.menu = $$v
+                                                            },
+                                                            expression: "menu",
+                                                          },
+                                                        },
+                                                        [
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "v-date-picker",
+                                                            {
+                                                              attrs: {
+                                                                "no-title": "",
+                                                                scrollable: "",
+                                                              },
+                                                              model: {
+                                                                value: _vm.date,
+                                                                callback:
+                                                                  function (
+                                                                    $$v
+                                                                  ) {
+                                                                    _vm.date =
+                                                                      $$v
+                                                                  },
+                                                                expression:
+                                                                  "date",
+                                                              },
+                                                            },
+                                                            [
+                                                              _c("v-spacer"),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "v-btn",
+                                                                {
+                                                                  attrs: {
+                                                                    text: "",
+                                                                    color:
+                                                                      "red",
+                                                                  },
+                                                                  on: {
+                                                                    click:
+                                                                      function (
+                                                                        $event
+                                                                      ) {
+                                                                        _vm.menu = false
+                                                                      },
+                                                                  },
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    "\n                                      Cancel\n                                    "
+                                                                  ),
+                                                                ]
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "v-btn",
+                                                                {
+                                                                  attrs: {
+                                                                    text: "",
+                                                                    color:
+                                                                      "primary",
+                                                                  },
+                                                                  on: {
+                                                                    click:
+                                                                      function (
+                                                                        $event
+                                                                      ) {
+                                                                        return _vm.$refs.menu.save(
+                                                                          _vm.date
+                                                                        )
+                                                                      },
+                                                                  },
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    "\n                                      OK\n                                    "
+                                                                  ),
+                                                                ]
+                                                              ),
+                                                            ],
+                                                            1
+                                                          ),
+                                                        ],
+                                                        1
+                                                      ),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
                                               _vm._v(" "),
                                               _c(
                                                 "v-row",
@@ -36639,27 +37588,26 @@ var render = function () {
                                                     [
                                                       _c("v-select", {
                                                         attrs: {
-                                                          items:
-                                                            _vm.arrayMarcas,
+                                                          items: _vm.arrayUsers,
                                                           label:
-                                                            "Seleccione Marca",
+                                                            "seleccione un usuario",
                                                           "item-value": "id",
                                                           "item-text": "nombre",
                                                         },
                                                         model: {
                                                           value:
-                                                            _vm.pedido.marca_id,
+                                                            _vm.pedido.user_id,
                                                           callback: function (
                                                             $$v
                                                           ) {
                                                             _vm.$set(
                                                               _vm.pedido,
-                                                              "marca_id",
+                                                              "user_id",
                                                               $$v
                                                             )
                                                           },
                                                           expression:
-                                                            "pedido.marca_id",
+                                                            "pedido.user_id",
                                                         },
                                                       }),
                                                     ],
@@ -36678,27 +37626,27 @@ var render = function () {
                                                       _c("v-select", {
                                                         attrs: {
                                                           items:
-                                                            _vm.arrayCategorias,
+                                                            _vm.arrayClientes,
                                                           label:
-                                                            "Seleccione Categoria",
+                                                            "seleccione una Cliente",
                                                           "item-value": "id",
                                                           "item-text": "nombre",
                                                         },
                                                         model: {
                                                           value:
                                                             _vm.pedido
-                                                              .categoria_id,
+                                                              .cliente_id,
                                                           callback: function (
                                                             $$v
                                                           ) {
                                                             _vm.$set(
                                                               _vm.pedido,
-                                                              "categoria_id",
+                                                              "cliente_id",
                                                               $$v
                                                             )
                                                           },
                                                           expression:
-                                                            "pedido.categoria_id",
+                                                            "pedido.cliente_id",
                                                         },
                                                       }),
                                                     ],

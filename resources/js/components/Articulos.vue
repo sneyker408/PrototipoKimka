@@ -22,15 +22,11 @@
           multi-sort
           class="elevation-1"
         >
-          <!-- Template Para Modal de Actualizar y Agregar Articulo -->
+          <!-- Template Para Modal de Actualizar y Agregar articulos-->
 
           <template v-slot:top>
             <v-toolbar flat color="white">
               <div class="flex-grow-1"></div>
-              <!--<v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/articulos/pdf" target="_blank">
-                     Generar PDF&nbsp;
-                    <v-icon>file-document-box-multiple-outline</v-icon>
-                  </v-btn>-->
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
                   <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">
@@ -46,64 +42,86 @@
                     <v-container>
                       <v-form ref="formArticulo" v-model="validForm" :lazy-validation="true">
                         <v-row>
-                          <v-col cols="12" md="6">
-                            <v-select
-                                v-model="articulo.categoria_id"
-                                :items="arrayCategorias"
-                                label="Seleccione Categoria"
-                                item-value="id"
-                                item-text="nombre"
-                                @keyup="errorsCategoria = []"
-                                :rules="[v => !!v || 'Categoria Es Requerida']"
-                                required
-                                :error-messages="errorsCategoria"   
-                            ></v-select>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <v-select
-                                v-model="articulo.color_id"
-                                :items="arrayColores"
-                                label="Seleccione Color"
-                                item-value="id"
-                                item-text="nombre"
-                            ></v-select>
-                          </v-col>
-                        </v-row>
+                            <v-col cols="12" md="6">
                         <v-text-field
-                          append-icon="mdi-key-outline"
+                          append-icon="mdi-folder-outline"
                           v-model="articulo.codigo"
-                          label="Código"
-                        ></v-text-field>                        
-                         <v-text-field
-                          append-icon="mdi-ruler-square"
-                          v-model="articulo.talla"
-                          label="Talla"
+                          label="Codigo"
                         ></v-text-field>
-                         <v-text-field
-                          append-icon="mdi-alpha-d-circle"
-                          v-model="articulo.descripcion"
-                          label="descripción"
-                        ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="6">
                         <v-text-field
-                          append-icon="mdi-notebook-multiple"
-                          v-model="articulo.existencia"
-                          @keyup="errorsExistencia = []"
-                          :rules="[v => !!v || 'La Existencia Es Requerida']"
-                          label="Existencia"
+                          append-icon="mdi-folder-outline"
+                          v-model="articulo.nombre"
+                          @keyup="errorsNombre = []"
+                          :rules="[v => !!v || 'Nombre Es Requerido']"
+                          label="Nombre"
                           required
-                          :error-messages="errorsProducto"
+                          :error-messages="errorsNombre"
                         ></v-text-field>
-                        <v-text-field         
-                         append-icon="mdi-currency-usd"                 
-                          label="Precio" 
+                      </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                        <v-textarea
+                          label="Description"
                           no-resize
-                          rows="2" 
-                          v-model="articulo.precio" 
-                          @keyup="errorsPrecio = []"
-                          :rules="[v => !!v || 'Precio Es Requerido']"
+                          rows="1"
+                          v-model="articulo.descripcion"
+                          @keyup="errorsDescripcion = []"
+                          :rules="[v => !!v || 'Descripcion Es Requerido']"
                           required
-                          :error-messages="errorsPrecio"                       
+                          :error-messages="errorsNombre"
+                        ></v-textarea>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                        <v-text-field
+                          append-icon="mdi-folder-outline"
+                          v-model="articulo.existencia"
+                          label="Existencia"
                         ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                        <v-text-field
+                          append-icon="mdi-folder-outline"
+                          v-model="articulo.tipo"
+                          label="Tipo"
+                        ></v-text-field>
+                            </v-col>
+                        <v-col cols="12" md="6">
+                        <v-text-field
+                          append-icon="mdi-folder-outline"
+                          v-model="articulo.precio"
+                          label="Precio"                        
+                        ></v-text-field>
+                            </v-col>
+                        </v-row>
+                          
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-select
+                                    v-model="articulo.color_id"
+                                    :items="arrayColores"
+                                    label="seleccione una color"
+                                    item-value="id"
+                                    item-text="nombre"
+                                    
+                                ></v-select>
+                            </v-col>
+
+                            <v-col cols="12" md="6">
+                                <v-select
+                                    v-model="articulo.categoria_id"
+                                    :items="arrayCategorias"
+                                    label="seleccione una Categoria"
+                                    item-value="id"
+                                    item-text="nombre"
+                                ></v-select>
+                            </v-col>
+                        </v-row>
+                        
                       </v-form>
                     </v-container>
                   </v-card-text>
@@ -178,12 +196,15 @@ export default {
       arrayColores: [],
       arrayCategorias: [],
       hTBArticulos: [
-        { text: "Código", value: "codigo" },
-        { text: "Categoria", value: "categoria" },
-        { text: "Talla", value: "talla" },
+        { text: "Codigo", value: "codigo" },
+        { text: "Nombre", value: "nombre" },
+        { text: "Descripcion", value: "descripcion" },
+        { text: "Tipo", value: "tipo" },
+        { text: "Precio", value: "precio"||currency },
+        { text: "Estado", value: "estado"},
+        { text: "Existencia", value: "existencia" },
+        { text: "Categoría", value: "categoria" },
         { text: "Color", value: "color" },
-        { text: "Descripción", value: "descripcion" },
-        { text: "Precio", value: "precio" },
         { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],
       loader: false,
@@ -194,11 +215,14 @@ export default {
         codigo: "",
         nombre: "",
         descripcion: "",
+        tipo: "",
+        precio: "",
+        existencia: "",
         estado: "",
-        color_id: null,
-        color: null,
         categoria_id: null,
-        categoria: null
+        categoria: null,
+        color_id: null,
+        color: null
       },
       validForm: true,
       snackbar: false,
@@ -218,6 +242,7 @@ export default {
     }
   },
   methods: {
+
     fetchArticulos() {
       let me = this;
       me.loader = true;
@@ -230,9 +255,12 @@ export default {
           me.loader = false;
           console.log(error);
         });
-     me.loader = false;
+      
+        //me.arrayCategorias = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+        me.loader = false;
     },
-      fetchCategorias() {
+    
+    fetchCategorias() {
       let me = this;
       me.loader = true;
       axios.get(`/categorias/all`)
@@ -244,12 +272,15 @@ export default {
           me.loader = false;
           console.log(error);
         });
+      
+     //me.arrayCategorias = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
      me.loader = false;
     },
-    fetchColores() {
+
+      fetchColores() {
       let me = this;
       me.loader = true;
-      axios.get(`/colors/all`)
+      axios.get(`/colores/all`)
         .then(function(response) {
           me.arrayColores = response.data;
           me.loader = false;
@@ -258,8 +289,11 @@ export default {
           me.loader = false;
           console.log(error);
         });
+      
+     //me.arrayCategorias = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
      me.loader = false;
     },
+    
     
     setMessageToSnackBar(msj, estado) {
       let me = this;
@@ -272,11 +306,17 @@ export default {
       setTimeout(() => {
         me.articulo = {
           id: null,
-          codigo: "",
-          nombre: "",
-          descripcion: "",
-          color: null,
-          categoria: null
+        codigo: "",
+        nombre: "",
+        descripcion: "",
+        tipo: "",
+        precio: "",
+        existencia: "",
+        estado: "",
+        categoria_id: null,
+        categoria: null,
+        color_id: null,
+        color: null
         };
         me.resetValidation();
       }, 300);
@@ -287,52 +327,44 @@ export default {
       me.$refs.formArticulo.resetValidation();
     },
     showModalEditar(articulo) {
+      console.log(articulo);
       let me = this;
       me.editedArticulo = me.arrayArticulos.indexOf(articulo);
       me.articulo = Object.assign({}, articulo);
       me.dialog = true;
     },
-    
-   saveArticulo() {
+    saveArticulo() {
       let me = this;
       if (me.$refs.formArticulo.validate()) {
         let accion = me.articulo.id == null ? "add" : "upd";
         me.loader = true;
         if(accion=="add"){
-            me.articulo.estado = "D";
-            axios.post(`/articulos/save`,me.articulo)
-            .then(function(response) {
-             // console.log(response.status);
-              if(response.status ==201){
-                 me.verificarAccionDato(response.data, response.status, accion);
-                 me.cerrarModal(); 
-                 console.log(response.status);
-              }else{
-                Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-                me.cerrarModal();
+          me.articulo.estado = "D";
+           axios.post('articulos/save',me.articulo)
+            .then(function (response) {
+             // console.log(response.statusText);
+              if(response.status==201){
+              me.verificarAccionDato(response.data, response.status, accion);
+              me.cerrarModal();
               }
-            
             })
             .catch(function(error){
-               Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+              Vue.swal("Error", "Ocurrio Un Error Intente Nuevamente", "error");
             });
             me.loader = false;
         }else{
             //para actualizar
-                axios.put(`/articulos/update`,me.articulo)
+            axios.put(`articulos/update`,me.articulo)
                .then(function(response) {
-                 if(response.status==202){
-                    me.verificarAccionDato(response.data, response.status, accion);
-                        me.cerrarModal();  
-                 }else{
-                    Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-                     me.cerrarModal();
-                 }
-              })
-          .catch(function(error) {
-            console.log(error);
+              if(response.status==202){
+              me.verificarAccionDato(response.data, response.status, accion);
+              me.cerrarModal();
+              }
+            })
+            .catch(function(error){
+              Vue.swal("Error", "Ocurrio Un Error Intente Nuevamente", "error");
+            });
             me.loader = false;
-          });
         }
       
       }
@@ -353,6 +385,7 @@ export default {
         }
         });
         //personalizando nueva confirmacion
+        console.log(articulo);
         Vue.swal.fire({
         title: 'Eliminar Articulo',
         text: "Una vez realizada la acción no se podra revertir !",
@@ -362,13 +395,16 @@ export default {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Si',
         cancelButtonText: "No"
+        
         }).then((result) => {
         if (result.value) {
             me.loader = true;
-            axios.post(`/articulos/delete`, articulo)
+            console.log(articulo);
+            axios.post(`articulos/delete`,articulo)
             .then(function(response) {
-                me.verificarAccionDato(response.data, response.status, "del");
-                me.loader = false;
+              console.log(response.data);
+              me.verificarAccionDato(response.data.data, response.status, "del");
+              me.loader = false;
             })
           }
         });
@@ -389,18 +425,18 @@ export default {
         }); 
       switch (accion) {
         case "add":
-          //Agrego al array de horarios el objecto que devuelve el Backend
-          //me.arrayHorarios.unshift(horario);
+          //Agrego al array de categorias el objecto que devuelve el Backend
+          //me.arrayCategorias.unshift(categoria);
           this.fetchArticulos(); 
           Toast.fire({
             icon: 'success',
-            title: 'Articulo registrado con Exito'
+            title: 'Articulo Registrado con Exito'
            });
           me.loader = false;
           break;
         case "upd":
-          //Actualizo al array de horarios el objecto que devuelve el Backend ya con los datos actualizados
-          //Object.assign(me.arrayHorarios[me.editedHorario], horario);
+          //Actualizo al array de categorias el objecto que devuelve el Backend ya con los datos actualizados
+          //Object.assign(me.arrayCategorias[me.editedCategoria], categoria);
           this.fetchArticulos(); 
           Toast.fire({
             icon: 'success',
@@ -412,12 +448,12 @@ export default {
         case "del":
           if (statusCode == 200) {
             try {
-              //Se elimina del array de Horarios Activos si todo esta bien en el backend
+              //Se elimina del array de Categorias Activos si todo esta bien en el backend
               me.arrayArticulos.splice(me.editedArticulo, 1);
               //Se Lanza mensaje Final
               Toast.fire({
                 icon: 'success',
-                title: 'Articulo Eliminado!'
+                title: 'Articulo Eliminado...!!!'
               });
             } catch (error) {
               console.log(error);

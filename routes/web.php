@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\CreacionController;
@@ -27,19 +28,19 @@ use App\Http\Controllers\VentaController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/',HomeController::class)->name("home");
+Auth::routes();
+Route::get('/admin', [HomeController::class, 'index'])->name("admin-index")->middleware('auth.admin');
+
 
 /**
  * Rutas para categorias
  */
 
 Route::get('/categorias',[CategoriaController::class,'index'])->name("categorias");
-
 Route::get('/categorias/all',[CategoriaController::class,'show']);
-
 Route::post('/categorias/save',[CategoriaController::class,'store']);
-
 Route::put('/categorias/update',[CategoriaController::class,'update']);
-
 Route::post('/categorias/delete',[CategoriaController::class,'destroy']);
 
 
@@ -48,13 +49,9 @@ Route::post('/categorias/delete',[CategoriaController::class,'destroy']);
  */
 
 Route::get('/clientes',[clienteController::class,'index'])->name("clientes");
-
 Route::get('/clientes/all',[clienteController::class,'show']);
-
 Route::post('/clientes/save',[clienteController::class,'store']);
-
 Route::put('/clientes/update',[clienteController::class,'update']);
-
 Route::post('/clientes/delete',[clienteController::class,'destroy']);
 
 
@@ -63,15 +60,10 @@ Route::post('/clientes/delete',[clienteController::class,'destroy']);
  */
 
 Route::get('/articulos',[ArticuloController::class,'index'])->name("articulos");
-
 Route::get('/articulos/all',[ArticuloController::class,'show']);
-
 Route::post('/articulos/save',[ArticuloController::class,'store']);
-
 Route::put('/articulos/update',[ArticuloController::class,'update']);
-
 Route::post('/articulos/delete',[ArticuloController::class,'destroy']);
-
 Route::get('/articulos/pdf',[PDFController::class,'pdfArticulos'])->name('pdfArticulos');
 
 
@@ -80,13 +72,9 @@ Route::get('/articulos/pdf',[PDFController::class,'pdfArticulos'])->name('pdfArt
  */
 
 Route::get('/colores',[ColorController::class,'index'])->name("colores");
-
 Route::get('/colores/all',[ColorController::class,'show']);
-
 Route::post('/colores/save',[ColorController::class,'store']);
-
 Route::put('/colores/update',[ColorController::class,'update']);
-
 Route::post('/colores/delete',[ColorController::class,'destroy']);
 
 
@@ -95,13 +83,9 @@ Route::post('/colores/delete',[ColorController::class,'destroy']);
  */
 
 Route::get('/compras',[CompraController::class,'index'])->name("compras");
-
 Route::get('/compras/all',[CompraController::class,'show']);
-
 Route::post('/compras/save',[CompraController::class,'store']);
-
 Route::put('/compras/update',[CompraController::class,'update']);
-
 Route::post('/compras/delete',[CompraController::class,'destroy']);
 
 
@@ -110,13 +94,9 @@ Route::post('/compras/delete',[CompraController::class,'destroy']);
  */
 
 Route::get('/creaciones',[CreacionController::class,'index'])->name("creaciones");
-
 Route::get('/creaciones/all',[CreacionController::class,'show']);
-
 Route::post('/creaciones/save',[CreacionController::class,'store']);
-
 Route::put('/creaciones/update',[CreacionController::class,'update']);
-
 Route::post('/creaciones/delete',[CreacionController::class,'destroy']);
 
 
@@ -124,13 +104,11 @@ Route::post('/creaciones/delete',[CreacionController::class,'destroy']);
  * Rutas para pedidos
  */
 
-Route::get('/pedidos',[PedidoController::class,'index'])->name("reservas");
-
-Route::get('/pedidos/state',[PedidoController::class,'show']);
-
-Route::post('/pedidos/save',[PedidoController::class,'store']);
-
-Route::put('/pedidos/change',[PedidoController::class,'changeState']);
+Route::get('/pedidos',[PedidoController::class,'index'])->name("pedidos");
+Route::get('/pedidos/all',[PedidoController::class,'show']);
+Route::post('/pedidos/save',[PedidosController::class,'store']);
+Route::put('/pedidos/update',[PedidoController::class,'update']);
+Route::post('/pedidos/delete',[ColorController::class,'destroy']);
 
 
 /**

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pedido;
 use Illuminate\Http\Request;
+use App\Models\Pedido;
 
 class PedidoController extends Controller
 {
@@ -18,16 +18,6 @@ class PedidoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -35,51 +25,82 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $pedido = new Pedido();
+            $pedido->nombre = $request->nombre;
+            $pedido->descripcion = $request->descripcion;
+            $pedido->estado = $request->estado;
+            $pedido->fecha_pedido = $request->fecha_pedido;
+            $pedido->fecha_entrega = $request->fecha_entrega;
+            $pedido->cliente_id = $request->cliente_id;
+            $pedido->user_id = $request->user_id;
+            if($pedido->save()>=1){
+            return response()->json(['status'=>'ok','data'=>$pedido],201);
+            }
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Pedido  $pedido
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Pedido $pedido)
+    public function show(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Pedido  $pedido
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Pedido $pedido)
-    {
-        //
+        try{
+            $pedidos = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
+            ->join('users','pedidos.user_id','=','users.id')
+            ->select('pedidos.id','pedidos.codigo','pedidos.nombre','pedidos.descripcion','pedidos.fecha_pedido','pedidos.fecha_entrega','pedidos.estado','pedidos.cliente_id','clientes.nombre as cliente','pedidos.user_id','users.nombre as user')
+            ->orderBy('pedidos.id','DESC')->get();
+            //$pedidos = Pedido::All();
+            return $pedidos;
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Pedido  $pedido
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pedido $pedido)
+    public function update(Request $request)
     {
-        //
+        try{
+            $pedido = Pedido::findOrfail($request->id);
+            $pedido->nombre = $request->nombre;
+            $pedido->descripcion = $request->descripcion;
+            $pedido->estado = $request->estado;
+            $pedido->fecha_pedido = $request->fecha_pedido;
+            $pedido->fecha_entrega = $request->fecha_entrega;
+            $pedido->cliente_id = $request->cliente_id;
+            $pedido->user_id = $request->user_id;
+            if($pedido->save()>=1){
+            return response()->json(['status'=>'ok','data'=>$pedido],202);
+            }
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Pedido  $pedido
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pedido $pedido)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            $pedido = Pedido::findOrfail($request->id);
+            $pedido->delete();
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
     }
 }

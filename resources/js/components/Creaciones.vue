@@ -49,17 +49,23 @@
                         <v-col cols="12" md="6">
                           <v-text-field
                           append-icon="mdi-checkbox-multiple-marked-circle"
-                          v-model="creacion.codigo"
-                          label="Estado"
+                          v-model="creacion.nombre"
+                          label="Nombre"
                         ></v-text-field> 
                         </v-col>
                         <v-col cols="12" md="6">
-                          <v-text-field
-                          append-icon="mdi-key-outline"
-                          v-model="creacion.codigo"
-                          label="Código"
-                        ></v-text-field> 
-                        </v-col>
+                            <v-select
+                                v-model="creacion.material_id"
+                                :items="arrayArticulos"
+                                label="Seleccione Material"
+                                item-value="id"
+                                item-text="nombre"
+                                @keyup="errorsArticulo = []"
+                                :rules="[v => !!v || 'Material Es Requerida']"
+                                required
+                                :error-messages="errorsMaterial"   
+                            ></v-select>
+                          </v-col>
                           <v-col cols="12" md="6">
                             <v-select
                                 v-model="creacion.articulo_id"
@@ -194,8 +200,8 @@ export default {
       arrayColores: [],
       arrayArticulos: [],
       hTBCreaciones: [
-        { text: "Código", value: "codigo" },
-        { text: "Estado", value: "estado" },
+        { text: "Nombre", value: "nombre" },
+        { text: "Material", value: "es" },
         { text: "Articulo", value: "articulo" },
         { text: "Talla", value: "talla" },
         { text: "Color", value: "color" },

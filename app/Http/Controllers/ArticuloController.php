@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Articulo;
 use Illuminate\Http\Request;
+use App\Models\Articulo;
 
 class ArticuloController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -25,19 +25,41 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-        try {
+        try{
             $articulo = new Articulo();
             $articulo->codigo = $request->codigo;
             $articulo->nombre = $request->nombre;
-            $articulo->talla = $request->talla;
             $articulo->descripcion = $request->descripcion;
+            $articulo->tipo = $request->tipo;
+            $articulo->precio = $request->precio;
+            $articulo->existencia = $request->existencia;
             $articulo->estado = $request->estado;
             $articulo->categoria_id = $request->categoria_id;
-            if($articulo->save()>=1) {
-                return response()->json(['status'=>'ok', 'data'=>$articulo],201);
+            $articulo->color_id = $request->color_id;
+            if($articulo->save()>=1){
+            return response()->json(['status'=>'ok','data'=>$articulo],201);
             }
+        }catch(\Exception $e){
+            return $e->getMessage();
         }
-        catch(\Exception $e) {
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        try{
+            $articulos = Articulo::join('categorias','articulos.categoria_id','=','categorias.id')
+            ->join('colores','articulos.color_id','=','colores.id')
+            ->select('articulos.id','articulos.codigo','articulos.nombre','articulos.descripcion','articulos.tipo','articulos.precio','articulos.existencia','articulos.estado','articulos.categoria_id','categorias.nombre as categoria','articulos.color_id','colores.nombre as color')
+            ->orderBy('articulos.id','DESC')->get();
+            //$articulos = Articulo::All();
+            return $articulos;
+        }catch(\Exception $e){
             return $e->getMessage();
         }
     }
@@ -48,23 +70,24 @@ class ArticuloController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     * 
-     * Actualizar Articulos
      */
     public function update(Request $request)
     {
-        try {
-            $articulo = Articulo::findOrFail($request->id);
+        try{
+            $articulo = Articulo::findOrfail($request->id);
             $articulo->codigo = $request->codigo;
-            $articulo->talla = $request->talla;
+            $articulo->nombre = $request->nombre;
             $articulo->descripcion = $request->descripcion;
-            //$articulo->estado = $request->estado;
+            $articulo->tipo = $request->tipo;
+            $articulo->precio = $request->precio;
+            $articulo->existencia = $request->existencia;
+            $articulo->estado = $request->estado;
             $articulo->categoria_id = $request->categoria_id;
-            if ($articulo->save()>=1) {
-                return response()->json(['status'=>'ok', 'data'=>$articulo],202);
+            $articulo->color_id = $request->color_id;
+            if($articulo->save()>=1){
+            return response()->json(['status'=>'ok','data'=>$articulo],202);
             }
-        }
-        catch(\Exception $e) {
+        }catch(\Exception $e){
             return $e->getMessage();
         }
     }
@@ -73,30 +96,14 @@ class ArticuloController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\
-     * 
-     * Eliminar cateogrias
+     * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
     {
-        try {
-            $articulo = Articulo::findORFail($request->id);
+        try{
+            $articulo = Articulo::findOrfail($request->id);
             $articulo->delete();
-        }
-        catch(\Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
-    public function show()
-    {
-        try {
-            $articulos = Articulo::join('categorias','articulos.categoria_id','=','categorias.id')
-            ->select('articulos.id','articulos.codigo','articulos.talla','articulos.descripcion','articulos.estado','articulos.categoria_id','categorias.nombre as categoria')
-            ->orderBy('articulos.id','DESC')->get();
-            return $articulos;
-        }
-        catch(\Exception $e) {
+        }catch(\Exception $e){
             return $e->getMessage();
         }
     }

@@ -15,6 +15,15 @@ return new class extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre',80)->unique();
+            $table->text('descripcion');
+            $table->string('estado',1)->default('D');
+            $table->date('fecha_pedido');            
+            $table->date('fecha_entrega');
+            $table->integer('cliente_id')->unsigned();
+            $table->foreign('cliente_id')->references('id')->on('cliente');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

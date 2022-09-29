@@ -22,15 +22,11 @@
           multi-sort
           class="elevation-1"
         >
-          <!-- Template Para Modal de Actualizar y Agregar Pedido -->
+          <!-- Template Para Modal de Actualizar y Agregar pedidos-->
 
           <template v-slot:top>
             <v-toolbar flat color="white">
               <div class="flex-grow-1"></div>
-               <!--<v-btn  small elevation="4" color="red" height="36" dark class="mb-2 botonpdf" href="/pedidos/pdf" target="_blank">
-                     Generar PDF&nbsp;
-                    <v-icon>file-document-box-multiple-outline</v-icon>
-                  </v-btn>-->
               <v-dialog v-model="dialog" persistent max-width="700px">
                 <template v-slot:activator="{ on }">
                   <v-btn elevation="10" color="grey darken-3" dark class="mb-2" v-on="on">
@@ -45,14 +41,10 @@
                   <v-card-text>
                     <v-container>
                       <v-form ref="formPedido" v-model="validForm" :lazy-validation="true">
+                        <v-row>
+                            <v-col cols="12" md="6">
                         <v-text-field
                           append-icon="mdi-folder-outline"
-                          v-model="pedido.codigo"
-                          label="Código"
-
-                        ></v-text-field>
-                         <v-text-field
-                          append-icon="laptop"
                           v-model="pedido.nombre"
                           @keyup="errorsNombre = []"
                           :rules="[v => !!v || 'Nombre Es Requerido']"
@@ -60,37 +52,130 @@
                           required
                           :error-messages="errorsNombre"
                         ></v-text-field>
-                         <v-textarea                          
-                          label="Descripción" 
+                      </v-col>
+                      <v-col cols="12" md="6">
+                        <v-textarea
+                          label="Descripcion"
                           no-resize
-                          rows="2" 
-                          v-model="pedido.descripcion" 
-                          @keyup="errorsNombre = []"
+                          rows="1"
+                          v-model="pedido.descripcion"
+                          @keyup="errorsDescripcion = []"
                           :rules="[v => !!v || 'Descripcion Es Requerido']"
                           required
-                          :error-messages="errorsNombre"                       
+                          :error-messages="errorsNombre"
                         ></v-textarea>
+                            </v-col>
+                        </v-row>                   
                         <v-row>
                           <v-col cols="12" md="6">
-                            <v-select
-                                v-model="pedido.marca_id"
-                                :items="arrayMarcas"
-                                label="Seleccione Marca"
-                                item-value="id"
-                                item-text="nombre"
-                                ></v-select>
+                                 <v-menu
+                                    ref="menu"
+                                    v-model="menu"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="date"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="auto"
+                                  >
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-text-field	
+                                        v-model="date"
+                                        label="Fecha de pedido"
+                                        prepend-icon="mdi-calendar"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                      ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                      v-model="date"
+                                      no-title
+                                      scrollable
+                                    >
+                                      <v-spacer></v-spacer>
+                                      <v-btn
+                                        text
+                                        color="red"
+                                        @click="menu = false"
+                                      >
+                                        Cancel
+                                      </v-btn>
+                                      <v-btn
+                                        text
+                                        color="primary"
+                                        @click="$refs.menu.save(date)"
+                                      >
+                                        OK
+                                      </v-btn>
+                                    </v-date-picker>
+                                  </v-menu>
                           </v-col>
-                          <v-col cols="12" md="6">
-                            <v-select
-                                v-model="pedido.categoria_id"
-                                :items="arrayCategorias"
-                                label="Seleccione Categoria"
-                                item-value="id"
-                                item-text="nombre"
-                                ></v-select>
+                          <v-col>
+                                <v-menu
+                                    ref="menu"
+                                    v-model="menu"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="date"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="auto"
+                                  >
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-text-field	
+                                        v-model="date"
+                                        label="Fecha de entrega"
+                                        prepend-icon="mdi-calendar"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                      ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                      v-model="date"
+                                      no-title
+                                      scrollable
+                                    >
+                                      <v-spacer></v-spacer>
+                                      <v-btn
+                                        text
+                                        color="red"
+                                        @click="menu = false"
+                                      >
+                                        Cancel
+                                      </v-btn>
+                                      <v-btn
+                                        text
+                                        color="primary"
+                                        @click="$refs.menu.save(date)"
+                                      >
+                                        OK
+                                      </v-btn>
+                                    </v-date-picker>
+                                  </v-menu>
                           </v-col>
                         </v-row>
-                      
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-select
+                                    v-model="pedido.user_id"
+                                    :items="arrayUsers"
+                                    label="seleccione un usuario"
+                                    item-value="id"
+                                    item-text="nombre"
+                                    
+                                ></v-select>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-select
+                                    v-model="pedido.cliente_id"
+                                    :items="arrayClientes"
+                                    label="seleccione una Cliente"
+                                    item-value="id"
+                                    item-text="nombre"
+                                ></v-select>
+                            </v-col>
+                        </v-row>
+                        
                       </v-form>
                     </v-container>
                   </v-card-text>
@@ -162,14 +247,16 @@ export default {
   data() {
      return {
       arrayPedidos: [],
-      arrayMarcas: [],
-      arrayCategorias: [],
+      arrayUsers: [],
+      arrayClientes: [],
       hTBPedidos: [
-        { text: "Fecha", value: "codigo" },
-        { text: "Estado", value: "categoria" },
-        { text: "Cliente", value: "talla" },
-        { text: "Fecha entrega", value: "color" },
-        { text: "Usuario", value: "descripcion" },
+        { text: "Nombre", value: "nombre" },
+        { text: "Descripcion", value: "descripcion" },
+        { text: "Estado", value: "estado" },
+        { text: "Fecha Pedido", value: "fecha_pedido"},
+        { text: "Fecha entrega", value: "fecha_entrega" },
+        { text: "Cliente", value: "cliente" },
+        { text: "User", value: "user" },
         { text: "Acciones", value: "action", sortable: false, align: "center" }
       ],
       loader: false,
@@ -177,14 +264,15 @@ export default {
       dialog: false,
       pedido: {
         id: null,
-        codigo: "",
         nombre: "",
         descripcion: "",
         estado: "",
-        marca_id: null,
-        marca: null,
-        categoria_id: null,
-        categoria: null
+        fecha_pedido: "",
+        fecha_entrega: "",
+        cliente_id: null,
+        cliente: null,
+        user_id: null,
+        user: null
       },
       validForm: true,
       snackbar: false,
@@ -204,6 +292,7 @@ export default {
     }
   },
   methods: {
+
     fetchPedidos() {
       let me = this;
       me.loader = true;
@@ -216,36 +305,45 @@ export default {
           me.loader = false;
           console.log(error);
         });
-     me.loader = false;
+      
+        //me.arrayClientes = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
+        me.loader = false;
     },
-      fetchCategorias() {
+    
+    fetchClientes() {
       let me = this;
       me.loader = true;
-      axios.get(`/categorias/all`)
+      axios.get(`/clientes/all`)
         .then(function(response) {
-          me.arrayCategorias = response.data;
+          me.arrayClientes = response.data;
           me.loader = false;
         })
         .catch(function(error) {
           me.loader = false;
           console.log(error);
         });
+      
+     //me.arrayClientes = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
      me.loader = false;
     },
-    fetchMarcas() {
+
+      fetchUsers() {
       let me = this;
       me.loader = true;
-      axios.get(`/marcas/all`)
+      axios.get(`/users/all`)
         .then(function(response) {
-          me.arrayMarcas = response.data;
+          me.arrayUsers = response.data;
           me.loader = false;
         })
         .catch(function(error) {
           me.loader = false;
           console.log(error);
         });
+      
+     //me.arrayClientes = [{"id":"1","nombre":"Hardware"},{"id":"2","nombre":"Accesorios"}];
      me.loader = false;
     },
+    
     
     setMessageToSnackBar(msj, estado) {
       let me = this;
@@ -258,11 +356,15 @@ export default {
       setTimeout(() => {
         me.pedido = {
           id: null,
-          codigo: "",
-          nombre: "",
-          descripcion: "",
-          marca: null,
-          categoria: null
+        nombre: "",
+        descripcion: "",
+        estado: "",
+        fecha_pedido: "",
+        fecha_entrega: "",
+        cliente_id: null,
+        cliente: null,
+        user_id: null,
+        user: null
         };
         me.resetValidation();
       }, 300);
@@ -273,52 +375,44 @@ export default {
       me.$refs.formPedido.resetValidation();
     },
     showModalEditar(pedido) {
+      console.log(pedido);
       let me = this;
       me.editedPedido = me.arrayPedidos.indexOf(pedido);
       me.pedido = Object.assign({}, pedido);
       me.dialog = true;
     },
-    
-   savePedido() {
+    savePedido() {
       let me = this;
       if (me.$refs.formPedido.validate()) {
         let accion = me.pedido.id == null ? "add" : "upd";
         me.loader = true;
         if(accion=="add"){
-            me.pedido.estado = "D";
-            axios.post(`/pedidos/save`,me.pedido)
-            .then(function(response) {
-             // console.log(response.status);
-              if(response.status ==201){
-                 me.verificarAccionDato(response.data, response.status, accion);
-                 me.cerrarModal(); 
-                 console.log(response.status);
-              }else{
-                Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-                me.cerrarModal();
+          me.pedido.estado = "D";
+           axios.post('pedidos/save',me.pedido)
+            .then(function (response) {
+             // console.log(response.statusText);
+              if(response.status==201){
+              me.verificarAccionDato(response.data, response.status, accion);
+              me.cerrarModal();
               }
-            
             })
             .catch(function(error){
-               Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
+              Vue.swal("Error", "Ocurrio Un Error Intente Nuevamente", "error");
             });
             me.loader = false;
         }else{
             //para actualizar
-                axios.put(`/pedidos/update`,me.pedido)
+            axios.put(`pedidos/update`,me.pedido)
                .then(function(response) {
-                 if(response.status==202){
-                    me.verificarAccionDato(response.data, response.status, accion);
-                        me.cerrarModal();  
-                 }else{
-                    Vue.swal("Error", "Ocurrio un error, intente de nuevo", "error");
-                     me.cerrarModal();
-                 }
-              })
-          .catch(function(error) {
-            console.log(error);
+              if(response.status==202){
+              me.verificarAccionDato(response.data, response.status, accion);
+              me.cerrarModal();
+              }
+            })
+            .catch(function(error){
+              Vue.swal("Error", "Ocurrio Un Error Intente Nuevamente", "error");
+            });
             me.loader = false;
-          });
         }
       
       }
@@ -339,6 +433,7 @@ export default {
         }
         });
         //personalizando nueva confirmacion
+        console.log(pedido);
         Vue.swal.fire({
         title: 'Eliminar Pedido',
         text: "Una vez realizada la acción no se podra revertir !",
@@ -348,13 +443,16 @@ export default {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Si',
         cancelButtonText: "No"
+        
         }).then((result) => {
         if (result.value) {
             me.loader = true;
-            axios.post(`/pedidos/delete`, pedido)
+            console.log(pedido);
+            axios.post(`pedidos/delete`,pedido)
             .then(function(response) {
-                me.verificarAccionDato(response.data, response.status, "del");
-                me.loader = false;
+              console.log(response.data);
+              me.verificarAccionDato(response.data.data, response.status, "del");
+              me.loader = false;
             })
           }
         });
@@ -375,18 +473,18 @@ export default {
         }); 
       switch (accion) {
         case "add":
-          //Agrego al array de horarios el objecto que devuelve el Backend
-          //me.arrayHorarios.unshift(horario);
+          //Agrego al array de clientes el objecto que devuelve el Backend
+          //me.arrayClientes.unshift(cliente);
           this.fetchPedidos(); 
           Toast.fire({
             icon: 'success',
-            title: 'Pedido registrado con Exito'
+            title: 'Pedido Registrado con Exito'
            });
           me.loader = false;
           break;
         case "upd":
-          //Actualizo al array de horarios el objecto que devuelve el Backend ya con los datos actualizados
-          //Object.assign(me.arrayHorarios[me.editedHorario], horario);
+          //Actualizo al array de clientes el objecto que devuelve el Backend ya con los datos actualizados
+          //Object.assign(me.arrayClientes[me.editedCliente], cliente);
           this.fetchPedidos(); 
           Toast.fire({
             icon: 'success',
@@ -398,12 +496,12 @@ export default {
         case "del":
           if (statusCode == 200) {
             try {
-              //Se elimina del array de Horarios Activos si todo esta bien en el backend
+              //Se elimina del array de Clientes Activos si todo esta bien en el backend
               me.arrayPedidos.splice(me.editedPedido, 1);
               //Se Lanza mensaje Final
               Toast.fire({
                 icon: 'success',
-                title: 'Pedido Eliminado!'
+                title: 'Pedido Eliminado...!!!'
               });
             } catch (error) {
               console.log(error);
@@ -421,8 +519,13 @@ export default {
   mounted() {
     let me = this;
     me.fetchPedidos();
-    me.fetchCategorias();
-    me.fetchMarcas();
+    me.fetchClientes();
+    me.fetchUsers();
   }
 };
 </script>
+
+
+
+
+<
